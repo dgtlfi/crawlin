@@ -1,0 +1,18 @@
+# Meteor packages used by this project, one per line.
+#
+# 'meteor add' and 'meteor remove' will edit this file for you,
+# but you can also edit it by hand.
+
+meteor-platform
+insecure
+mizzao:bootstrap-3
+iron:router
+mrt:leaflet
+accounts-password
+mrt:accounts-ui-bootstrap-3
+timbroddin:instagram-node
+peppelg:bootstrap-3-modal
+rajit:bootstrap3-datepicker
+service-configuration
+oauth1
+

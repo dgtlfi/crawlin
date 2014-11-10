@@ -1,0 +1,26 @@
+<template name = 'schedule'>
+  {{#if showCreateEventDialog}}
+    {{> createEventDialog}}
+  {{/if}}
+  <div class='row'>
+    
+    <div class="col-sm-4">
+      <h2>Schedule</h2>
+      <ul>
+        {{#each crawlList}}
+          <li class="scheduleList {{ maybeSelected }}"> <!-- Add "selected" class (if selected) -->
+            <a href="{{ pathFor 'crawls' }}"> {{title}} </a>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+    {{#if currentUser}}
+      <div class="col-sm-4">
+        <button type="button" class="btn btn-primary btn-sm createEvent" data-toggle="myModal" data-target="#myModal">
+          Create New Event
+        </button>
+      </div>
+    {{/if}}
+
+  </div>
+</template>

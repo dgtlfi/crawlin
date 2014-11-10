@@ -1,0 +1,84 @@
+<template name="createDialog">
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="createModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close cancel" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="createModal">Choose a new Spot</h4>
+        </div>
+        <div class="modal-body">
+          
+          {{#if error}}
+            <div class="alert alert-error">{{error}}</div>
+          {{/if}}
+
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="inputRestaurant" class="col-sm-2 control-label">Restaurant</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control name" id="inputRestaurant1" placeholder="Restaurant">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputDescription" class="col-sm-2 control-label">Description</label>
+              <div class="col-sm-10">
+                <textarea id="descriptionText" class="form-control description" rows="3"></textarea>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputRestaurant" class="col-sm-2 control-label">What stop is it?</label>
+              <div class="col-sm-2">
+                <input type="text" class="form-control number" id="inputStop" placeholder="#">
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" class="private"> Private?
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+          </form>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default cancel" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary save">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+  <!-- <h3>WHHHWHWHHWW</h3>
+  <div class="mask"> </div>
+  <div class="modal">
+    <div class="modal-header">
+      <button type="button" class="close cancel">&times;</button>
+      <h3>Add party</h3>
+    </div>
+
+    <div class="modal-body">
+      {{#if error}}
+        <div class="alert alert-error">{{error}}</div>
+      {{/if}}
+
+      <label>Title</label>
+      <input type="text" class="title span5">
+
+      <label>Description</label>
+      <textarea class="description span5"></textarea>
+
+      <label class="checkbox">
+        <input type="checkbox" class="private">
+        Private party &mdash; invitees only
+      </label>
+    </div>
+
+    <div class="modal-footer">
+      <a href="#" class="btn cancel">Cancel</a>
+      <a href="#" class="btn btn-primary save">Add party</a>
+    </div>
+  </div> -->

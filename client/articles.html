@@ -1,0 +1,22 @@
+<template name = 'fullArticle'>
+  <h2>{{ title }}</h2>
+  <p>{{ body }}</p>
+</template>
+
+<template name = 'articles'>
+  <div class='row'>
+    <div class="col-sm-4">
+      <h2>Articles</h2>
+      <ul>
+        {{#each articleList}}
+		  <li class="{{ maybeSelected }}"> <!-- Add "selected" class (if selected) -->
+		  <a href="{{ pathFor 'article' }}"> {{title}} </a>
+		  </li>
+		{{/each}}
+      </ul>
+    </div>
+    <div class="col-sm-8">
+      {{> fullArticle selectedArticle}}
+    </div>
+  </div>
+</template>

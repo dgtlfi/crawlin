@@ -1,0 +1,8 @@
+<template name = 'about'>
+  <h2>About Crawlin'</h2>
+  {{#each spotsList}}
+    <p>{{title}}, {{latitude}}</p>
+  {{/each}}
+  <div id="map-home"></div>
+  {{>yelp}}
+</template>
