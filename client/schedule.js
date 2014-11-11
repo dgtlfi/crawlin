@@ -1,3 +1,9 @@
+Template.schedule.events({
+  'click .createEvent': function (event, template) {
+    Session.set("showCreateEventDialog", true);
+  },
+});
+
 Template.schedule.helpers({
   maybeSelected: function () {
     var currentRoute = Router.current();

@@ -43,13 +43,16 @@ Router.map(function () {
     path: '/schedule/:permalink',
     data: function () {
       Session.set('selectedEvent', Events.findOne({permalink: this.params.permalink}, {fields: {_id:1}}));
-      
-      console.log('Crawls');
+      if(!Session.get('selectedSpot')){
+          Session.set('selectedSpot',Spots.findOne({number: '1'}));
+        }
+      // console.log('Crawls');
       // console.log(Session.get('selectedEvent'));
       return {
         //selectedEvent = Event Name, Details
         //allSpots should be all of the spots for that Event
         selectedEvent: Events.findOne({permalink: this.params.permalink}),
+        selectedSpot: Spots.findOne({_id: Session.get('selectedSpot')}),
         // allSpots: Spots.find({eventID: eventID._id})
       }
     },

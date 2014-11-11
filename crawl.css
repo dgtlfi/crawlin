@@ -14,13 +14,13 @@
     z-index: 1;
 }*/
 
-
+/*
 .leaflet-animated-icon {
   border-radius: 50%;
   border: none;
   opacity: .7;
   background: black;
-}
+}*/
 
 .leaflet-div-icon {
     border-radius: 50%;
@@ -29,7 +29,7 @@
     font-family: verdana;
     text-align: center;
     color: white;
-    opacity: .8;
+    opacity: .9;
     vertical-align:middle;
 }
 

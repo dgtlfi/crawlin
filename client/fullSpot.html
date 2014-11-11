@@ -1,16 +1,26 @@
 <template name = 'crawls'>
+  {{#if showCreateDialog}}
+    {{> createDialog}}
+  {{/if}}
+  {{#if showEditContentDialog}}
+    {{> editContentDialog selectedSpot}}
+  {{/if}}
   <div class='row'>
     <div class="col-sm-8">
       {{> fullSpot selectedEvent}}
     </div>
     <div class="col-sm-4">
        <!-- This has to be where we put in Spot Description -->
-      {{#if showContent}}
-        <h2>{{showContent.name}}</h2>
-        <p>{{showContent.description}}</p>
-      {{/if}}
+      {{> spotDetails}}
     </div>
   </div>
+</template>
+
+<template name="spotDetails">
+  {{#if showContent}}
+    <h2>{{showContent.name}}</h2>
+    <p>{{showContent.description}}</p>
+  {{/if}}
 </template>
 
 <template name='map'>
@@ -40,18 +50,11 @@
 </template>
 
 <template name ='fullSpot'>
-  {{#if showCreateDialog}}
-    {{> createDialog}}
-  {{/if}}
-  {{#if showEditContentDialog}}
-    {{> editContentDialog }}
-  {{/if}}
   <h2>{{ title }}</h2>
   {{ description }}
-  {{ _id }}
   <br />
   <br />
-  {{> map allSpots}}
+  {{> map}}
   <br />
   <br />
   {{> feed}}
