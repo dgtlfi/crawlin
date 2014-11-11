@@ -20,3 +20,12 @@ Template.crawls.helpers({
     return data;
   },
 });
+
+//kh js-------------
+$(document).ready(function(){
+
+  $(".leaflet-marker-icon b").on("click", function() {
+    console.log( ( this ).text() );
+  });
+  
+});
