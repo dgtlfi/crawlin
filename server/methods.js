@@ -100,4 +100,36 @@ Meteor.methods({
       rsvps: []
     });
   },
+
+  updateSpot: function (options) {
+    options = options || {};
+    if (! (typeof options.name === "string" && options.name.length &&
+           typeof options.description === "string" &&
+           options.description.length))
+      throw new Meteor.Error(400, "Required parameter missing");
+    if (options.name.length > 100)
+      throw new Meteor.Error(413, "Title too long");
+    if (options.description.length > 1000)
+      throw new Meteor.Error(413, "Description too long");
+    if (! this.userId)
+      throw new Meteor.Error(403, "You must be logged in");
+    // console.log(options.spotID);
+    // console.log(option.number);
+    return Spots.update(options.spotID,{
+      owner: this.userId,
+      latlng: options.latlng,
+      name: options.name,
+      eventID: options.eventID,
+      description: options.description,
+      public: !! options.public,
+      number: options.number,
+      invited: [],
+      rsvps: []
+    });
+  },
+
+  deleteSpot: function (options) {
+    options = options || {};
+    return Spots.remove(options.spotID);
+  },
 });
