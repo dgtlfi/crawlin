@@ -23,15 +23,27 @@ if (Meteor.isClient) {
   }
 
   var addMarker = function(marker) {
-    console.log('addMarker');
-    map.addLayer(marker);
-    markers[marker.options._id] = marker;
+    // console.log('addMarker');
+    if(!markers[marker.options._id]){
+      console.log('marker not in array, adding')
+      map.addLayer(marker);
+      markers[marker.options._id] = marker;
+    }
+    console.log('did not add marker, it was already there');
   }
 
-  // var removeMarker = function (_id){
-  //   var marker = markers[_id];
-  //   if (map.hasLayer(marker)) map.removeLayer(marker);
-  // }
+  var removeMarker = function (_id){
+    var marker = markers[_id];
+    console.log(marker);
+    if (map.hasLayer(marker)){
+      map.removeLayer(marker);
+    } else{
+      console.log('removeMarker failed');
+      map.eachLayer(function(layer){
+        console.log(layer);
+      });
+    }
+  }
 
   var createIcon = function(spot){
     var className = "leaflet-div-icon ";
@@ -46,14 +58,18 @@ if (Meteor.isClient) {
   var addSpots = function(spot) {
     var marker = new L.Marker(spot.latlng, {
       _id: spot._id,
-      icon: createIcon(spot)
+      icon: createIcon(spot),
+      riseOnHover: true,
+      riseOffset: 1500,
     }).on('click', function(e){
       //Add click to show description
-      Session.set('showContent', spot);
+      // Session.set('showContent', spot);
       Session.set('selectedSpot', e.target.options._id);
     }).on('dblclick', function(e){
+      // Session.set('showContent', spot);
+      Session.set('selectedSpot', e.target.options._id);
       Session.set('showEditContentDialog', true);
-      console.log('dblclick');
+      Session.set('createCoords', e.latlng);
     });
     addMarker(marker);
     // var circle = L.circle(spot.latlng, 150, {
@@ -62,6 +78,15 @@ if (Meteor.isClient) {
     //   fillOpacity: 0.5
     // }).addTo(map);
   }
+
+  // var editSpot = function(marker){
+  //   marker.on('dblclick', function(e){
+  //     // Session.set('showContent', spot);
+  //     Session.set('selectedSpot', e.target.options._id);
+  //     Session.set('showEditContentDialog', true);
+  //     Session.set('createCoords', e.latlng);
+  //   });
+  // }
 
   var popup = L.popup();
   function notLoggedIn(e) {
@@ -78,33 +103,42 @@ if (Meteor.isClient) {
     Session.set("showCreateDialog", true);
   };
 
-  // Template.map.created = function(){
-    
-  //   Spots.find({}).observe({
-  //     added: function(spot){
-  //       addSpots(spot);
-  //       // var marker = new L.Marker(spot.latlng, {
-  //       //   _id: spot._id,
-  //       //   icon: createIcon(spot)
-  //       // }).on('click', function(e){
-  //       //   console.log('createdClick');
-  //       //   console.log(e);
-  //       //   Session.set('selectedSpot', e.target.options._id)
-  //       // });
-  //       // console.log('created!!!');
-  //       // console.log(Session.get('selectedSpot'));
-  //       // addMarker(marker);
-  //     },
-  //     changed: function(spot){
-  //       // var marker = markers[spot._id];
-  //       // if (marker) marker.setIcon(createIcon(spot));
-  //       addSpots(spot);
-  //     },
-  //     removed: function(spot){
-  //       removeMarker(spot._id);
-  //     }
-  //   });
-  // }
+  Template.map.created = function(){
+
+    markers=[]
+    if (! Session.get('selectedEvent') ) {
+      console.log("Didn't find selectedEvent - map.js");
+      var currentRoute = Router.current();
+      var currentPerm = currentRoute.params.permalink;
+      // var eventObj = Events.findOne({permalink: currentPerm}, {fields: {_id:1}});
+      // console.log(eventObj);
+      // var eventID = eventObj._id;
+      // Session.set('eventID', eventID );
+      // var eventSpots = Spots.find({eventID: eventID, public: true }).fetch();
+      
+      // var count = 0;
+      // eventSpots.forEach(function(spot){
+      //   // console.log(spot.eventID);
+      //   addSpots(spot);
+      //   count+=1;
+      // });
+      // console.log(eventObj);
+      // Session.set('selectedEvent',this._id);
+    } else{
+      var eventObj = Session.get('selectedEvent');
+      var eventID = eventObj._id;
+      Session.set('eventID', eventID);
+      var eventSpots = Spots.find({eventID: eventID, public: true }).fetch();
+      // console.log(eventSpots);
+      var count = 0;
+      eventSpots.forEach(function(spot){
+        // console.log(spot.eventID);
+        addSpots(spot);
+        count+=1;
+      });
+    }
+  }
+  
 
   Template.map.rendered = function(){
     $(window).resize(function(){
@@ -113,6 +147,7 @@ if (Meteor.isClient) {
     }).resize();
 
     initialize($("#map_canvas")[0], [38.900644, -77.036849], 13 );
+    
 
     // var circle = L.circle([38.900644, -77.036849], 150, {
     //     color: 'blue',
@@ -143,40 +178,19 @@ if (Meteor.isClient) {
       openCreateDialog(e.latlng);
     });
 
-    
-
-    if (! Session.get('selectedEvent') ) {
-      console.log('hi');
-      var currentRoute = Router.current();
-      var currentPerm = currentRoute.params.permalink;
-      
-      var eventObj = Events.findOne({permalink: currentPerm}, {fields: {_id:1}});
-      Session.set('selectedEvent', eventObj );
-      // console.log(eventObj);
-      Session.set('selectedEvent',this._id);
-    } else{
-      var eventObj = Session.get('selectedEvent');
-      var eventID = eventObj._id;
-      var eventSpots = Spots.find({eventID: eventID, public: true }).fetch();
-      // console.log(eventSpots);
-      var count = 0;
-      eventSpots.forEach(function(spot){
-        // console.log(spot.eventID);
-        addSpots(spot);
-        count+=1;
-      });
-
-      
-    }
-
-    Spots.find({eventID: eventID, public: true }).observe({
+    Spots.find({eventID: Session.get('eventID'), public: true }).observe({
         added: function(spot){
+          console.log('added');
           addSpots(spot);
         },
         changed: function(spot){
-          addSpots(spot);
+          console.log('changed');
+          var marker = markers[spot._id];
+          // if (marker) marker.setIcon(createIcon(spot));
+          // editSpot(spot._id);
         },
         removed: function(spot){
+          console.log('removed');
           removeMarker(spot._id);
         }
       });

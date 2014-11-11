@@ -10,11 +10,13 @@ Template.editContentDialog.events({
     var latlng = Session.get("createCoords");
     var eventID = Session.get('selectedEvent')._id;
     var number = template.find(".number").value;
-    // console.log('number');
+    var spotID = Session.get('selectedSpot');
+    // console.log(spotID);
     // console.log(number);
 
     if (name.length && description.length) {
       Meteor.call('updateSpot', {
+        spotID: spotID,
         name: name,
         description: description,
         latlng: latlng,
@@ -30,27 +32,37 @@ Template.editContentDialog.events({
       //   }
       // )};
       $('body').removeClass('modal-open');
-      Session.set("showCreateDialog", false);
+      Session.set("showEditContentDialog", false);
     } else {
       Session.set("createError",
                   "It needs a Name and a Description");
     }
   },
 
+  'click .delete': function () {
+    var spotID = Session.get('selectedSpot');
+    Meteor.call('deleteSpot', {
+        spotID: spotID,
+      });
+    $('body').removeClass('modal-open');
+    Modal.hide(Session.get('currentModal'));
+    Session.set("showEditContentDialog", false);
+  },
+
   'click .cancel': function () {
     $('body').removeClass('modal-open');
     Modal.hide(Session.get('currentModal'));
-    Session.set("showCreateDialog", false);
+    Session.set("showEditContentDialog", false);
   },
 
   'click .modal-backdrop': function(){
     $('body').removeClass('modal-open');
     Modal.hide(Session.get('currentModal'));
-    Session.set("showCreateDialog", false);
+    Session.set("showEditContentDialog", false);
   }
 });
 
-Template.createDialog.helpers({
+Template.editContentDialog.helpers({
   createError: function(){
     return Session.get("createError");
   },

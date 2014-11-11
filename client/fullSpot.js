@@ -1,22 +1,28 @@
-Template.schedule.events({
-  'click .createEvent': function (event, template) {
-    Session.set("showCreateEventDialog", true);
-  },
-});
 
-Template.fullSpot.helpers({
+
+Template.crawls.helpers({
   showCreateDialog: function () {
     Session.set('currentModal', 'createModal');
     Modal.show('createModal')
     return Session.get("showCreateDialog");
   },
+  showEditContentDialog: function () {
+    Session.set('currentModal', 'createModal');
+    Modal.show('createModal')
+    return Session.get("showEditContentDialog");
+  },
 });
 
-Template.crawls.helpers({
+
+
+Template.spotDetails.helpers({
 
   showContent: function(){
-    var data = Session.get("showContent")
-    // console.log(data);
-    return data;
+    if (Session.get("selectedSpot")){
+      // console.log(Session.get('selectedSpot'));
+      // console.log(Spots.findOne(Session.get('selectedSpot')));
+      return Spots.findOne(Session.get('selectedSpot'));
+    }
+
   },
 });
