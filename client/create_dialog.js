@@ -8,10 +8,11 @@ Template.createDialog.events({
     var description = template.find(".description").value;
     var public = ! template.find(".private").checked;
     var latlng = Session.get("createCoords");
-    var eventID = Session.get('selectedEvent')._id;
+    // var eventID = Session.get('selectedEvent')._id;
+    var permalink = Session.get('selectedPerm');
     var number = template.find(".number").value;
-    // console.log('number');
-    // console.log(number);
+    console.log('permalink');
+    console.log(permalink);
 
     if (name.length && description.length) {
       Meteor.call('createSpot', {
@@ -19,7 +20,8 @@ Template.createDialog.events({
         description: description,
         latlng: latlng,
         public: public,
-        eventID: eventID,
+        // eventID: eventID,
+        permalink: permalink,
         number: number,
       });
       // function (error, template) {

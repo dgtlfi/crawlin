@@ -3,7 +3,7 @@
     {{> createDialog}}
   {{/if}}
   {{#if showEditContentDialog}}
-    {{> editContentDialog selectedSpot}}
+    {{> editContentDialog}}
   {{/if}}
   <div class='row'>
     <div class="col-sm-8">
@@ -12,6 +12,11 @@
     <div class="col-sm-4">
        <!-- This has to be where we put in Spot Description -->
       {{> spotDetails}}
+    </div>
+  </div>
+  <div class='row'>
+    <div class="col-sm-8">
+      {{> feed}}
     </div>
   </div>
 </template>
@@ -57,6 +62,5 @@
   {{> map}}
   <br />
   <br />
-  {{> feed}}
 </template>
 

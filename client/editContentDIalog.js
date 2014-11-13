@@ -8,7 +8,8 @@ Template.editContentDialog.events({
     var description = template.find(".description").value;
     var public = ! template.find(".private").checked;
     var latlng = Session.get("createCoords");
-    var eventID = Session.get('selectedEvent')._id;
+    // var eventID = Session.get('selectedEvent')._id;
+    var permalink = Session.get('selectedPerm');
     var number = template.find(".number").value;
     var spotID = Session.get('selectedSpot');
     // console.log(spotID);
@@ -21,7 +22,8 @@ Template.editContentDialog.events({
         description: description,
         latlng: latlng,
         public: public,
-        eventID: eventID,
+        // eventID: eventID,
+        permalink: permalink,
         number: number,
       });
       // function (error, template) {
@@ -66,5 +68,11 @@ Template.editContentDialog.helpers({
   createError: function(){
     return Session.get("createError");
   },
+
+  selectedSpot: function(){
+    // console.log(Session.get('selectedSpot'));
+    // console.log(Session.get('selectedPerm'));
+    return Spots.findOne({_id: Session.get('selectedSpot')});
+  }, 
 });
 

@@ -1,13 +1,13 @@
 
 
-// ServiceConfiguration.configurations.remove({service: "yelp"});
-// ServiceConfiguration.configurations.insert({
-//   service: "yelp",
-//   consumerKey: "jfHL-rIeE2biaczIOdxgwQ",
-//   consumerSecret: "ra7JBRLYCF1ZO27TP9XmIlK0Fx8",
-//   accessToken: "3xSYQcl0O7dfRXcWwzTFlM9beH-RFvwu",
-//   accessTokenSecret: "qbAfnxCrFWaJaIl5A1oobG0L9tc"
-// });
+ServiceConfiguration.configurations.remove({service: "yelp"});
+ServiceConfiguration.configurations.insert({
+  service: "yelp",
+  consumerKey: "jfHL-rIeE2biaczIOdxgwQ",
+  consumerSecret: "ra7JBRLYCF1ZO27TP9XmIlK0Fx8",
+  accessToken: "3xSYQcl0O7dfRXcWwzTFlM9beH-RFvwu",
+  accessTokenSecret: "qbAfnxCrFWaJaIl5A1oobG0L9tc"
+});
 
   // createClient('5d38e4277bc0461f8fa6283e68f85258', '6caefe9e0df64e668de79b9269b87214');
   /* OPTIONS: { [min_tag_id], [max_tag_id] }; */
@@ -92,7 +92,8 @@ Meteor.methods({
       owner: this.userId,
       latlng: options.latlng,
       name: options.name,
-      eventID: options.eventID,
+      // eventID: options.eventID,
+      permalink: options.permalink,
       description: options.description,
       public: !! options.public,
       number: options.number,
@@ -119,7 +120,8 @@ Meteor.methods({
       owner: this.userId,
       latlng: options.latlng,
       name: options.name,
-      eventID: options.eventID,
+      // eventID: options.eventID,
+      permalink: options.permalink,
       description: options.description,
       public: !! options.public,
       number: options.number,
@@ -131,5 +133,58 @@ Meteor.methods({
   deleteSpot: function (options) {
     options = options || {};
     return Spots.remove(options.spotID);
+  },
+
+  yelpQuery: function(search, isCategory, longitude, latitude) {
+    console.log('Yelp search for userId: ' + this.userId + '(search, isCategory, lng, lat) with vals (', search, isCategory, longitude, latitude, ')');
+
+    // Query OAUTH credentials (these are set manually)
+    var auth = ServiceConfiguration.configurations.findOne({service: 'yelp'});
+    // console.log(auth);
+    // Add auth signature manually
+    console.log(auth);
+    auth['serviceProvider'] = { signatureMethod: "HMAC-SHA1" };
+
+    var accessor = {
+      consumerSecret: auth.consumerSecret,
+      tokenSecret: auth.accessTokenSecret
+    },
+    parameters = {};
+
+    // console.log(auth);
+
+    // Search term or categories query
+    if(isCategory)
+      parameters.category_filter = search;
+    else
+      parameters.term = search;
+
+    // Set lat, lon location, if available (SF is default location)
+    if(longitude && latitude)
+      parameters.ll = latitude + ',' + longitude;
+    else
+      parameters.location = 'DC';
+
+    // Results limited to 5
+    parameters.limit = 5;
+
+    // Configure OAUTH parameters for REST call
+    parameters.oauth_consumer_key = auth.consumerKey;
+    parameters.oauth_consumer_secret = auth.consumerSecret;
+    parameters.oauth_token = auth.accessToken;
+    parameters.oauth_signature_method = auth.serviceProvider.signatureMethod;
+
+    // Create OAUTH1 headers to make request to Yelp API
+    var oauthBinding = new OAuth1Binding(accessor, 'http://api.yelp.com/v2/search');
+    // console.log(oauthBinding);
+    // console.log('daadfasdf');
+    oauthBinding.accessToken = auth.accessToken;
+    oauthBinding.accessTokenSecret = auth.accessTokenSecret;
+    // console.log(oauthBinding);
+    var headers = oauthBinding._buildHeader();
+    oSignature = oauthBinding._getSignature('GET', 'http://api.yelp.com/v2/search', headers, auth.accessTokenSecret, parameters)
+    console.log(oSignature);
+    // Return data results only
+    return oauthBinding._call('GET', 'http://api.yelp.com/v2/search', headers, parameters).data;
   },
 });
