@@ -18,7 +18,7 @@
 
 <template name="spotDetails">
   {{#if showContent}}
-    <h2>{{showContent.number}} {{showContent.name}}</h2>
+    <h2><span class="selected">{{showContent.number}}</span> {{showContent.name}}</h2>
     <p>{{showContent.description}}</p>
   {{/if}}
 </template>

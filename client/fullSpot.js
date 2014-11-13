@@ -30,8 +30,8 @@ Template.spotDetails.helpers({
 //kh js-------------
 $(document).ready(function(){
 
-  $(".leaflet-marker-icon b").on("click", function() {
-    console.log( ( this ).text() );
+  $(".leaflet-marker-icon .public").click(function() {
+    console.log("it clicked once!");
   });
   
 });
