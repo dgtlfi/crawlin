@@ -13,15 +13,6 @@ Template.navItems.helpers({
 });
 
 
-//kh js-------------
-$(document).ready(function(){
-
-	$(".leaflet-marker-icon").on("click", function() {
-		alert( $(this).text() );
-	});
-	
-});
-
 
 
 

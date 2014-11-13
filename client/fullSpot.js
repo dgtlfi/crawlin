@@ -26,12 +26,3 @@ Template.spotDetails.helpers({
 
   },
 });
-
-//kh js-------------
-$(document).ready(function(){
-
-  $(".leaflet-marker-icon .public").click(function() {
-    console.log("it clicked once!");
-  });
-  
-});
