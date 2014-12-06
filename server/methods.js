@@ -1,13 +1,28 @@
+var getYelpOauthBinding = function(url) {
+    console.log("ouath")
+    var config = ServiceConfiguration.configurations.findOne({service: "yelp"});
+    if (config) {
+        config.secret = config.consumerSecret;
+        var oauthBinding = new OAuth1Binding(config, url);
+        oauthBinding.accessToken = config.accessToken;
+        oauthBinding.accessTokenSecret = config.accessTokenSecret;
+        return oauthBinding;
+    } else {
+        throw new Meteor.Error(500, "Yelp Not Configured");
+    }
+}
 
 
-// ServiceConfiguration.configurations.remove({service: "yelp"});
-// ServiceConfiguration.configurations.insert({
-//   service: "yelp",
-//   consumerKey: "jfHL-rIeE2biaczIOdxgwQ",
-//   consumerSecret: "ra7JBRLYCF1ZO27TP9XmIlK0Fx8",
-//   accessToken: "3xSYQcl0O7dfRXcWwzTFlM9beH-RFvwu",
-//   accessTokenSecret: "qbAfnxCrFWaJaIl5A1oobG0L9tc"
-// });
+
+
+ServiceConfiguration.configurations.remove({service: "yelp"});
+ServiceConfiguration.configurations.insert({
+  service: "yelp",
+  consumerKey: "jfHL-rIeE2biaczIOdxgwQ",
+  consumerSecret: "ra7JBRLYCF1ZO27TP9XmIlK0Fx8",
+  accessToken: "3xSYQcl0O7dfRXcWwzTFlM9beH-RFvwu",
+  accessTokenSecret: "qbAfnxCrFWaJaIl5A1oobG0L9tc"
+});
 
   // createClient('5d38e4277bc0461f8fa6283e68f85258', '6caefe9e0df64e668de79b9269b87214');
   /* OPTIONS: { [min_tag_id], [max_tag_id] }; */
@@ -62,6 +77,9 @@ Meteor.methods({
     if (! this.userId)
       throw new Meteor.Error(403, "You must be logged in");
 
+    var cityLatLng = Zipcodes.lookupByName(options.city, options.state);
+    // console.log(cityLatLng);
+
     return Events.insert({
       owner: this.userId,
       title: options.title,
@@ -69,6 +87,9 @@ Meteor.methods({
       permalink: options.permalink,
       description: options.description,
       public: !! options.public,
+      city: options.city,
+      state: options.state,
+      latlng: [cityLatLng[0].latitude, cityLatLng[0].longitude],
     });
   },
 
@@ -87,17 +108,20 @@ Meteor.methods({
     if (! this.userId)
       throw new Meteor.Error(403, "You must be logged in");
 
-    // console.log(option.number);
+    // console.log(options.latlng);
     return Spots.insert({
       owner: this.userId,
       latlng: options.latlng,
       name: options.name,
-      eventID: options.eventID,
+      yelpID: options.yelpID,
+      // eventID: options.eventID,
+      permalink: options.permalink,
       description: options.description,
       public: !! options.public,
       number: options.number,
       invited: [],
-      rsvps: []
+      rsvps: [],
+      yelpObj: options.yelpObj,
     });
   },
 
@@ -114,17 +138,17 @@ Meteor.methods({
     if (! this.userId)
       throw new Meteor.Error(403, "You must be logged in");
     // console.log(options.spotID);
-    // console.log(option.number);
+    console.log(options.number);
     return Spots.update(options.spotID,{
-      owner: this.userId,
-      latlng: options.latlng,
-      name: options.name,
-      eventID: options.eventID,
-      description: options.description,
-      public: !! options.public,
-      number: options.number,
-      invited: [],
-      rsvps: []
+      $set:{
+        name: options.name,
+        //yelpID: options.yelpID
+        // eventID: options.eventID,
+        description: options.description,
+        public: !! options.public,
+        number: options.number,
+      }
+      
     });
   },
 
@@ -132,4 +156,55 @@ Meteor.methods({
     options = options || {};
     return Spots.remove(options.spotID);
   },
+
+  searchYelp: function(search, isCategory, city, latitude, longitude) {
+     //this.unblock();
+     
+     // Add REST resource to base URL
+     var url = "http://api.yelp.com/v2/search";
+     
+     var oauthBinding = getYelpOauthBinding(url);
+     
+     // Build up query
+     var parameters = {};
+
+     // Search term or categories query
+     if(isCategory) {
+          parameters.category_filter = search;
+     } else {
+          parameters.term = search;
+     }
+
+     // Set lat, lon location, if available or default location
+     if(longitude && latitude){
+          parameters.ll = latitude + "," + longitude;
+     }
+     
+     if (city){
+      // console.log(city);
+      parameters.location = city;
+     } else {
+          parameters.location = "DC";
+     }
+
+      //Search Radius
+     parameters.radius_filter = "40000";
+
+     // Results limited to 5
+     parameters.limit = 5;
+
+     // Only return .data because that is how yelp formats its responses
+     return oauthBinding.get(url, parameters);
+   },
+
+   getLatLng: function(adr){
+      var geo = new GeoCoder();
+      var result = geo.geocode(adr);
+      return result;
+   },
+
+   getProfile: function(str) {
+      return Meteor.user({_id:Meteor.userId()});
+   },
+
 });

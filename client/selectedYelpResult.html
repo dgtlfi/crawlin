@@ -1,0 +1,24 @@
+<template name = "selectedYelpResult">
+  	{{#if yes}}
+	  <div class="col-sm-8">
+	    <h2>{{yes.name}}</h2>
+	    <a href="https://maps.google.com?q={{yes.location.address}}+{{yes.location.city}}+{{yes.location.state_code}}+{{yes.location.postal_code}}" target="_blank" class="item"> {{yes.location.display_address}} </a>
+	    <p>{{yes.display_phone}}</p>
+	    <a href="{{yes.url}}" target="_blank">
+		  <img src="{{yes.rating_img_url_small}}" alt="{{yes.id}}">
+		</a>
+	    <p>{{yes.rating}} from {{yes.review_count}} reviews</p>
+
+	    <a href="#" class="yelpImage">{{yes.img}}</a> 
+	    <br />
+	    <a href="{{yes.url}}" target="_blank">
+		  <img src="{{yes.image_url}}" alt="{{yes.id}}">
+		</a>
+		<br />
+		<a href="{{yes.url}}" target="_blank">
+		  <img src="http://s3-media1.fl.yelpcdn.com/assets/2/www/img/14f29ad24935/map/miniMapLogo.png" alt="yelp-home">
+		</a>
+		
+	  </div>
+	{{/if}}
+</template>

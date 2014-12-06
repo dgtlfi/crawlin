@@ -3,7 +3,7 @@
     {{> createDialog}}
   {{/if}}
   {{#if showEditContentDialog}}
-    {{> editContentDialog selectedSpot}}
+    {{> editContentDialog}}
   {{/if}}
   <div class='row'>
     <div class="col-sm-8">
@@ -12,6 +12,11 @@
     <div class="col-sm-4">
        <!-- This has to be where we put in Spot Description -->
       {{> spotDetails}}
+    </div>
+  </div>
+  <div class='row'>
+    <div class="col-sm-8">
+      {{> feed}}
     </div>
   </div>
 </template>
@@ -49,14 +54,23 @@
 
 </template>
 
+<template name = 'createNew'>
+  {{#if currentUser}}
+    <a href='#' class='createNewSpot'>Double Click on map to add a Spot or Click Here</a>
+    {{#if showSpotDialog}}
+      {{> createSpotDialog}}
+    {{/if}}
+  {{/if}}
+</template>
+
 <template name ='fullSpot'>
   <h2>{{ title }}</h2>
   {{ description }}
   <br />
   <br />
+  {{> createNew}}
   {{> map}}
   <br />
   <br />
-  {{> feed}}
 </template>
 

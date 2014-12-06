@@ -37,9 +37,11 @@
 	/*Original Blue*/
     /*background: #49AFCD;*/
     /*Conflower Blue*/
-    background: #6495ED;
+    /*background: #6495ED;*/
     /*Lime Green*/
     /*background: #32CD32;*/
+    /*Black*/
+    background: #000;
 }
 
 .leaflet-div-icon.private {
