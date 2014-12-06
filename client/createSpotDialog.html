@@ -1,0 +1,88 @@
+<template name="createSpotDialog">
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="createEventModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close cancel" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="createEventModal">Choose a Spot</h4>
+        </div>
+        <div class="modal-body">
+          
+          {{#if error}}
+            <div class="alert alert-error">{{error}}</div>
+          {{/if}}
+
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="inputTitle" class="col-sm-2 control-label">Yelp Search</label>
+              <div class="col-sm-8">
+                <input type="text" class="form-control searchTerm" id="inputSearch" placeholder="Search">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputTitle" class="col-sm-2 control-label">City Name</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control searchCity" id="inputCity" placeholder="DC is Default">
+              </div>
+            
+            </div>
+            
+            {{#if yelpResults}}
+              <div class="form-group">
+                <div class="col-sm-4">
+                  <h1>Results</h1>
+                  <ul>
+                    {{#each yelpResults}}
+                      <li class="list"> <!-- Add "selected" class (if selected) -->
+                        <a href="#" id="{{id}}"> {{name}} </a>
+                      </li>
+                   {{/each}}
+                  </ul>
+                </div>
+
+                {{> selectedYelpResult}}
+
+              </div>  
+
+              <div class="form-group">
+                <label for="inputDescription" class="col-sm-2 control-label">Host's Description</label>
+                <div class="col-sm-10">
+                  <textarea id="descriptionText" class="form-control description" rows="3"></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputRestaurant" class="col-sm-2 control-label">What stop is it?</label>
+                <div class="col-sm-2">
+                  <input type="text" class="form-control number" id="inputStop" placeholder="#">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" class="private"> Private?
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+
+            {{/if}} 
+
+
+            
+          </form>
+
+        
+        
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default cancel" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary save">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</template>

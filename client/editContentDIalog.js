@@ -7,23 +7,24 @@ Template.editContentDialog.events({
     var name = template.find(".name").value;
     var description = template.find(".description").value;
     var public = ! template.find(".private").checked;
-    var latlng = Session.get("createCoords");
+    // var latlng = Session.get("createCoords");
     // var eventID = Session.get('selectedEvent')._id;
-    var permalink = Session.get('selectedPerm');
+    // var permalink = Session.get('selectedPerm');
     var number = template.find(".number").value;
     var spotID = Session.get('selectedSpot');
     // console.log(spotID);
     // console.log(number);
+
 
     if (name.length && description.length) {
       Meteor.call('updateSpot', {
         spotID: spotID,
         name: name,
         description: description,
-        latlng: latlng,
+        // latlng: latlng,
         public: public,
         // eventID: eventID,
-        permalink: permalink,
+        // permalink: permalink,
         number: number,
       });
       // function (error, template) {
@@ -34,6 +35,7 @@ Template.editContentDialog.events({
       //   }
       // )};
       $('body').removeClass('modal-open');
+      Modal.hide(Session.get('currentModal'));
       Session.set("showEditContentDialog", false);
     } else {
       Session.set("createError",

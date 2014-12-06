@@ -23,26 +23,39 @@ if (Meteor.isClient) {
   }
 
   var addMarker = function(marker) {
-    // console.log('addMarker');
-    if(!markers[marker.options._id]){
-      // console.log('marker not in array, adding')
+    // console.log(markers);
+    // console.log(marker.options._id);
+    var markerID = marker.options._id;
+    if (markers.length == 0){
+      markers[markerID] = marker;
       map.addLayer(marker);
-      markers[marker.options._id] = marker;
+    }else if(! markers[marker]){
+      // console.log("in");
+      // console.log('marker not in array, adding')
+      markers[markerID] = marker;
+      map.addLayer(marker);
+      // console.log(markers);
     }
     // console.log('did not add marker, it was already there');
   }
 
-  var removeMarker = function (_id){
-    var marker = markers[_id];
-    // console.log(marker);
+  var removeMarker = function (spot){
+    // console.log(markers[spot._id]);
+    var marker = markers[spot._id];
     if (map.hasLayer(marker)){
       map.removeLayer(marker);
+      markers[spot._id] = null;
     } else{
-      // console.log('removeMarker failed');
+      console.log('removeMarker failed');
       map.eachLayer(function(layer){
         console.log(layer);
       });
     }
+  }
+
+  var updateMarker = function (spot){
+    removeMarker(spot);
+    addSpots(spot);
   }
 
   var createIcon = function(spot){
@@ -56,6 +69,7 @@ if (Meteor.isClient) {
   }
 
   var addSpots = function(spot) {
+    // console.log(spot._id);
     var marker = new L.Marker(spot.latlng, {
       _id: spot._id,
       icon: createIcon(spot),
@@ -88,7 +102,7 @@ if (Meteor.isClient) {
       }
 
   var openCreateDialog = function(latlng){
-    console.log(latlng);
+    // console.log(latlng);
     Session.set("createCoords", latlng);
     Session.set("createError", null);
     Session.set("showCreateDialog", true);
@@ -108,6 +122,10 @@ if (Meteor.isClient) {
     }).resize();
 
     initialize($("#map_canvas")[0], [38.900644, -77.036849], 13 );
+    // var selectedPerm = Session.get('selectedPerm');
+    // Events.findOne({permalink: selectedPerm}, {fields: {latlng:1} });
+    // console.log(Events.findOne({permalink: selectedPerm}, {fields: {latlng:1} }));
+    // initialize($("#map_canvas")[0], selectedPerm, 10 );
 
     map.on('dblclick', function(e){
       if (! Meteor.userId()){
@@ -128,14 +146,12 @@ if (Meteor.isClient) {
           addSpots(spot);
         },
         changed: function(spot){
-          // console.log('changed');
-          var marker = markers[spot._id];
-          // if (marker) marker.setIcon(createIcon(spot));
-          // editSpot(spot._id);
+          // var marker = markers[spot._id];
+          updateMarker(spot);
         },
         removed: function(spot){
           // console.log('removed');
-          removeMarker(spot._id);
+          removeMarker(spot);
         }
       });
   }

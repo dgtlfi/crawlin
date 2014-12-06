@@ -4,7 +4,6 @@
 # but you can also edit it by hand.
 
 meteor-platform
-insecure
 mizzao:bootstrap-3
 iron:router
 mrt:leaflet
@@ -15,4 +14,4 @@ peppelg:bootstrap-3-modal
 rajit:bootstrap3-datepicker
 service-configuration
 oauth1
-
+mrt:zipcodes

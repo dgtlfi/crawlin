@@ -11,8 +11,26 @@ Template.crawls.helpers({
     Modal.show('createModal')
     return Session.get("showEditContentDialog");
   },
+
+  
+
 });
 
+Template.createNew.helpers({
+  showSpotDialog: function(){
+    Session.set('currentModal', 'createModal');
+    Modal.show('createModal')
+    return Session.get("showCreateSpotDialog");
+  },
+
+});
+
+Template.createNew.events({
+  'click a.createNewSpot': function(event, template){
+    Session.set('showCreateSpotDialog', true);
+    Session.set('yelpResult', null);
+  }
+});
 
 
 Template.spotDetails.helpers({

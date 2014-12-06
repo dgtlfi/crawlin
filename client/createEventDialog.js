@@ -17,12 +17,14 @@ Template.createEventDialog.events({
 
         return ret;
     }
-    
+
     var title = template.find(".title").value;
     var description = template.find(".description").value;
     var public = ! template.find(".private").checked;
     var date = $('#my-datepicker').datepicker('getUTCDate');
     var permalink = prototype(title);
+    var city = template.find(".city").value;
+    var state = template.find(".state").value;
 
     if (title.length && description.length) {
       Meteor.call('createEvent', {
@@ -31,12 +33,14 @@ Template.createEventDialog.events({
         permalink: permalink,
         date: date,
         public: public,
+        city: city,
+        state: state,
       }, function (error, template) {
         if (! error) {
           $('body').removeClass('modal-open');
           // Session.set("selectedEvent", this._id);
         }
-        console.log(this._id);
+        // console.log(this._id);
       });
       Session.set("showCreateEventDialog", false);
     } else {

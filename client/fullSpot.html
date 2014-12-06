@@ -54,11 +54,21 @@
 
 </template>
 
+<template name = 'createNew'>
+  {{#if currentUser}}
+    <a href='#' class='createNewSpot'>Double Click on map to add a Spot or Click Here</a>
+    {{#if showSpotDialog}}
+      {{> createSpotDialog}}
+    {{/if}}
+  {{/if}}
+</template>
+
 <template name ='fullSpot'>
   <h2>{{ title }}</h2>
   {{ description }}
   <br />
   <br />
+  {{> createNew}}
   {{> map}}
   <br />
   <br />
