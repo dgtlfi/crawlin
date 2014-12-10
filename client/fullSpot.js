@@ -43,4 +43,14 @@ Template.spotDetails.helpers({
     }
 
   },
+
+});
+
+Template.spotYelpInfo.helpers({
+
+  yes: function(){
+      spotYelpObj = Session.get('spotYelpObj');
+      return spotYelpObj;
+    
+    },
 });
