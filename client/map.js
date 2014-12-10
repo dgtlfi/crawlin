@@ -76,9 +76,9 @@ if (Meteor.isClient) {
       riseOnHover: true,
       riseOffset: 1500,
     }).on('click', function(e){
-      //Add click to show description
-      // Session.set('showContent', spot);
       Session.set('selectedSpot', e.target.options._id);
+      Session.set('activeSpot', spot.number);
+      Session.set('spotYelpObj', spot.yelpObj);
     }).on('dblclick', function(e){
       // Session.set('showContent', spot);
       Session.set('selectedSpot', e.target.options._id);
@@ -155,5 +155,75 @@ if (Meteor.isClient) {
         }
       });
   }
+
+
+//   Template.map.events({
+//     'click .': function(event, template){
+
+  Template.map.helpers({
+    spot: function(){
+      var spot = Spots.find({permalink: Session.get('selectedPerm')}, {fields: {number:1}}).fetch(); 
+      // console.log(spot);
+      var newArray = []
+      spot.forEach(function(x){
+        if (x.number == Session.get('activeSpot')){
+          // console.log('active');
+          newArray.push({number: x.number, status: 'active'});
+
+        }else {
+          // console.log('inactive');
+          newArray.push({number: x.number, status: 'inactive'});
+        }
+        
+      });
+      return newArray;
+    },
+
+  });
+
+  Template.map.events({
+    'click .pagination li': function(event, template){
+      // console.log(event.target.text);
+      number = event.target.text;
+      number2 = number.replace(/[^0-9]/ig,'');
+      text = number.replace(/[^a-zA-Z]/ig,'');
+      
+      // console.log(spot._id);
+      if (text === 'Previous'){
+        active = Session.get('activeSpot');
+        prevNumber = (parseInt(active)-1).toString();
+        if (prevNumber != 0){
+          spot = Spots.findOne({permalink: Session.get('selectedPerm'), number: prevNumber});
+          Session.set('selectedSpot', spot._id);
+          Session.set('activeSpot', prevNumber);
+          Session.set('spotYelpObj', spot.yelpObj);
+        }    
+      } else if (text === 'Next'){
+        active = Session.get('activeSpot');
+        nextNumber = (parseInt(active)+1).toString();
+        count = Spots.find({permalink: Session.get('selectedPerm')}, {fields: {id:1}}).count();
+        if (nextNumber <= count){
+          spot = Spots.findOne({permalink: Session.get('selectedPerm'), number: nextNumber});
+          Session.set('selectedSpot', spot._id);
+          Session.set('activeSpot', nextNumber);
+          Session.set('spotYelpObj', spot.yelpObj);
+        }else {
+          nextNumber = Session.get('activeSpot');
+        }
+        
+      } else {
+        active = Session.get('activeSpot');
+        spot = Spots.findOne({permalink: Session.get('selectedPerm'), number: number2});
+        Session.set('selectedSpot', spot._id);
+        Session.set('activeSpot', number2);
+        Session.set('spotYelpObj', spot.yelpObj);
+      }
+      
+    },
+
+  });
+
 }
+
+
 

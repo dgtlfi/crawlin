@@ -4,6 +4,7 @@
 Template.createSpotDialog.events({
   'click .save': function (event, template) {
     result = Session.get('selectedYelpResult');
+    count = Spots.find({permalink: Session.get('selectedPerm')}, {fields: {id:1}}).count();
 
     var name = result.name;
     var yelpID = result.id;
@@ -14,7 +15,8 @@ Template.createSpotDialog.events({
     var latlng = {lat:lat, lng:lng};
     // var eventID = Session.get('selectedEvent')._id;
     var permalink = Session.get('selectedPerm');
-    var number = template.find(".number").value;
+    // var number = template.find(".number").value;
+    var number = (parseInt(count)+1).toString();
     // console.log('permalink');
     // console.log(permalink);
     // console.log(latlng);
@@ -33,12 +35,12 @@ Template.createSpotDialog.events({
       }, function (error, template) {
         if (! error) {
           $('body').removeClass('modal-open');
+          Session.set("showCreateSpotDialog", false)
           Modal.hide(Session.get('currentModal'));
           // Session.set("selectedEvent", this._id);
         }
-        // console.log(this._id);
+        
       });
-      Session.set("showCreateEventDialog", false);
     } else {
       Session.set("createError",
                   "It needs a Name and a Description");
@@ -115,7 +117,7 @@ Template.createSpotDialog.events({
     // console.log(restID);
     Session.set('selectedYelpID', restID);
     theResult = Session.get('yelpResult');
-    console.log(theResult);
+    // console.log(theResult);
     theResult.forEach(function(result){
       if (result.id == restID){
         Session.set('selectedYelpResult', result);

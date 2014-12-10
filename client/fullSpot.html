@@ -25,11 +25,52 @@
   {{#if showContent}}
     <h2>{{showContent.name}}</h2>
     <p>{{showContent.description}}</p>
+
+    <br />
+    <hr>
+    {{> spotYelpInfo}}
+
+  {{/if}}
+</template>
+
+<template name = "spotYelpInfo">
+  {{#if yes}}
+    <h4>{{yes.name}}</h4>
+    <a href="https://maps.google.com?q={{yes.location.address}}+{{yes.location.city}}+{{yes.location.state_code}}+{{yes.location.postal_code}}" target="_blank" class="item"> {{yes.location.display_address}} </a>
+    <p>{{yes.display_phone}}</p>
+    <a href="{{yes.url}}" target="_blank">
+    <img src="{{yes.rating_img_url_small}}" alt="{{yes.id}}">
+  </a>
+    <p>{{yes.rating}} from {{yes.review_count}} reviews</p>
+
+    <a href="#" class="yelpImage">{{yes.img}}</a> 
+    <br />
+    <a href="{{yes.url}}" target="_blank">
+    <img src="{{yes.image_url}}" alt="{{yes.id}}">
+  </a>
+  <br />
+  <a href="{{yes.url}}" target="_blank">
+    <img src="http://s3-media1.fl.yelpcdn.com/assets/2/www/img/14f29ad24935/map/miniMapLogo.png" alt="yelp-home">
+  </a>
+    
   {{/if}}
 </template>
 
 <template name='map'>
   <div id="map_canvas"></div>
+  <nav>
+    <ul class="pagination">
+      <!-- <h3>test</h3> -->
+      <li class="inactive"><a href="#"><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>
+      {{#each spot}}
+        <li class="{{status}}"><a href="#">{{number}}<span class="sr-only">(current)</span></a></li>
+        {{#if disabled}}
+          <li class="disabled"><a href="#">{{number}}<span class="sr-only">(current)</span></a></li>
+        {{/if}}
+      {{/each}}
+      <li class="inactive"><a href="#"><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a></li>
+    </ul>
+  </nav>
 </template>
 
 <template name = 'details'>
@@ -56,7 +97,7 @@
 
 <template name = 'createNew'>
   {{#if currentUser}}
-    <a href='#' class='createNewSpot'>Double Click on map to add a Spot or Click Here</a>
+    <a href='#' class='createNewSpot'>Double click on the map to add a Spot or Click Here to use Yelp Search</a>
     {{#if showSpotDialog}}
       {{> createSpotDialog}}
     {{/if}}
@@ -70,7 +111,6 @@
   <br />
   {{> createNew}}
   {{> map}}
-  <br />
-  <br />
+  <!-- <br /> -->
 </template>
 
