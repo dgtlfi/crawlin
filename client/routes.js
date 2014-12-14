@@ -44,7 +44,6 @@ Router.map(function () {
     data: function () {
       this.render('crawls');
       Session.set('selectedPerm', this.params.permalink);
-     
       return {
         //selectedEvent = Event Name, Details
         //allSpots should be all of the spots for that Event

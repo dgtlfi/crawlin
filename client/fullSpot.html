@@ -29,8 +29,30 @@
     <br />
     <hr>
     {{> spotYelpInfo}}
+    {{> rsvp}}
 
   {{/if}}
+</template>
+
+<template name="rsvp">
+  {{#if show_LoginDialog}}
+    {{> showLoginDialog}}
+  {{/if}}
+  {{#if showRsvpDialog}}
+    {{> createRsvpDialog}}
+  {{/if}}
+  {{#if showRsvpError}}
+    {{> createRsvpError}}
+  {{/if}}
+  <br />
+  <br />
+  <div class='row'>
+    <div class="col-sm-2">
+      <button type="button" class="btn btn-primary btn-sm RSVP" data-toggle="myModal" disabled="{{disabled}}" data-target="#myModal">Want to RSVP?</button>
+    </div>
+  </div>
+  
+  
 </template>
 
 <template name = "spotYelpInfo">
@@ -41,7 +63,7 @@
     <a href="{{yes.url}}" target="_blank">
     <img src="{{yes.rating_img_url_small}}" alt="{{yes.id}}">
   </a>
-    <p>{{yes.rating}} from {{yes.review_count}} reviews</p>
+    <p>{{yes.rating}} stars out of {{yes.review_count}} reviews</p>
 
     <a href="#" class="yelpImage">{{yes.img}}</a> 
     <br />
@@ -106,6 +128,11 @@
 
 <template name ='fullSpot'>
   <h2>{{ title }}</h2>
+  <h4>Where: {{city}}, {{state}}</h4>
+  <h4>When: {{date}}</h4>
+  <h5>Starts at {{startTime}}{{startPM}} </h5>
+  <h5>Event Hashtag: {{tag}}</h5>
+  <h3>Hello</h3>
   {{ description }}
   <br />
   <br />

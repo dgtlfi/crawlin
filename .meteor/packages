@@ -9,9 +9,11 @@ iron:router
 mrt:leaflet
 accounts-password
 mrt:accounts-ui-bootstrap-3
-timbroddin:instagram-node
 peppelg:bootstrap-3-modal
 rajit:bootstrap3-datepicker
 service-configuration
 oauth1
 mrt:zipcodes
+timbroddin:instagram-node
+mrt:moment
+

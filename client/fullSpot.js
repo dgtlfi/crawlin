@@ -29,7 +29,76 @@ Template.createNew.events({
   'click a.createNewSpot': function(event, template){
     Session.set('showCreateSpotDialog', true);
     Session.set('yelpResult', null);
+  },
+
+});
+
+Template.rsvp.helpers({
+  showRsvpDialog: function(){
+    Session.set('currentModal', 'rsvpModal');
+    Modal.show('rsvpModal')
+    return Session.get("showRsvpDialog");
+  },
+
+  showRsvpError: function(){
+    Session.set('currentModal', 'rsvpErrorModal');
+    Modal.show('rsvpErrorModal')
+    return Session.get("showRsvpError");
+  },
+
+  show_LoginDialog: function(){
+    Session.set('currentModal', 'loginModal');
+    Modal.show('loginModal')
+    return Session.get("show_LoginDialog");
+  },
+
+  disabled: function(){
+    if (Session.get('disableRsvp')){
+      return 'disabled';
+    }
   }
+
+
+});
+
+Template.rsvp.rendered = function(){
+  var currentUser = Meteor.user();
+  var permalink = Session.get('selectedPerm');
+  var alreadyRsvpd = Events.findOne({permalink:permalink, rsvpd: currentUser})
+  if (alreadyRsvpd){
+    Session.set('disableRsvp', true);
+  }
+}
+
+Template.rsvp.events({
+  'click .RSVP': function(event, template){
+    var currentUser = Meteor.user();
+    var permalink = Session.get('selectedPerm');
+    if (! currentUser){
+      Session.set('show_LoginDialog', true);
+    }else{
+      var alreadyRsvpd = Events.findOne({permalink:permalink, rsvpd: currentUser})
+      if (alreadyRsvpd){
+        Session.set('disableRsvp', true);
+        Session.set('showRsvpError', true);
+      } else{ 
+        Meteor.call('updateRsvp', {
+          currentUser: currentUser,
+          permalink: permalink,
+          }, function(error, result){
+            if(!error){
+              Session.set('showRsvpDialog', true);
+              Session.set('disableRsvp', true);
+            }
+          }
+          
+        );
+      }
+      
+    }
+    
+  },
+
 });
 
 
@@ -54,3 +123,21 @@ Template.spotYelpInfo.helpers({
     
     },
 });
+
+
+
+// Template.feed.helpers({
+
+// });
+
+// Template.feed.rendered =  function(){
+
+//   var selectedPerm = Session.get('selectedPerm');
+//   console.log('hiInsta');
+//   // var result = Meteor.call('searchInsta', selectedPerm);
+//   Meteor.call('searchInsta', selectedPerm, function(error, result) {
+//     console.log(error);
+//     console.log(result);
+           
+//   });
+// }

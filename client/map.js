@@ -111,6 +111,14 @@ if (Meteor.isClient) {
   Template.map.created = function(){
 
     markers=[];
+    if (! Session.get("selectedSpot")) {
+      var spot = Spots.findOne({permalink:Session.get('selectedPerm'), number:'1'});
+      if (spot) {
+        Session.set("selectedSpot", spot._id);
+        Session.set('activeSpot', spot.number);
+        Session.set('spotYelpObj', spot.yelpObj);
+      }
+    }
 
   }
   
