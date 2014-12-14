@@ -11,7 +11,7 @@ Meteor.startup(function () {
   }
   if (! Events.findOne()){
     var events = [
-      {title: 'DC Eating', date: Date(), public: 'true', permalink: 'dc-eating', description: "Barcelona, KBC, Fados, Rosas, Sonoma, La Plaza"},
+      {owner: Meteor.userID, title: 'DC Eating', date: moment().format('MMMM Do, YYYY'), public: 'true', permalink: 'dc-eating', description: "Barcelona, KBC, Fados, Rosas, Sonoma, La Plaza", tag:'dc_eats', instaObj:'', rsvps: 0, city: 'Washington', state: 'DC', rsvps: 0, rsvpd: [], startTime:'05:00', startPM: 'checked', endTime: '02:00', endPM: '' },
       // {title: 'Bmore Eating', date: Date(), public: 'true', permalink: 'bmore-eating', description details: "Barssss"},
     ];
     events.forEach(function(eventItem){
@@ -19,16 +19,16 @@ Meteor.startup(function () {
       })
   }
 
-  ig.tag_media_recent('snow', [max_tag_id=5], function(err, medias, pagination, remaining, limit) {
-  if(!err){
-    Meteor.publish('igMedia', function(){
-      console.log(medias);
-      return medias;
-    });
-    }else{
-      console.log(err.message);
-    }
-  });
+  // ig.tag_media_recent('snow', [max_tag_id=5], function(err, medias, pagination, remaining, limit) {
+  // if(!err){
+  //   Meteor.publish('igMedia', function(){
+  //     console.log(medias);
+  //     return medias;
+  //   });
+  //   }else{
+  //     console.log(err.message);
+  //   }
+  // });
 
   // instagram.tags.media('snow', {max_id: 5, count: 5}, function (tag, error) { 
   //   if (! error){

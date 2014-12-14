@@ -1,1 +1,1 @@
-{ "instagram-node": { "client_id": "0e7b20a9ff4e4cc893812854f0886f20", "client_secret": "632d941e15474d93b466e86aa3c2e771" } }
+{ "InstagramAPI": { "CLIENT_ID": "0e7b20a9ff4e4cc893812854f0886f20", "CLIENT_SECRET": "632d941e15474d93b466e86aa3c2e771" } }

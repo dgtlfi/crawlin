@@ -13,13 +13,8 @@ Template.createSpotDialog.events({
     var lat = result.location.coordinate.latitude;
     var lng = result.location.coordinate.longitude;
     var latlng = {lat:lat, lng:lng};
-    // var eventID = Session.get('selectedEvent')._id;
     var permalink = Session.get('selectedPerm');
-    // var number = template.find(".number").value;
     var number = (parseInt(count)+1).toString();
-    // console.log('permalink');
-    // console.log(permalink);
-    // console.log(latlng);
 
     if (name.length && description.length) {
       Meteor.call('createSpot', {
@@ -38,6 +33,14 @@ Template.createSpotDialog.events({
           Session.set("showCreateSpotDialog", false)
           Modal.hide(Session.get('currentModal'));
           // Session.set("selectedEvent", this._id);
+
+          var spot = Spots.findOne({permalink: permalink, number:number});
+          if (spot) {
+            Session.set("selectedSpot", spot._id);
+            Session.set('activeSpot', spot.number);
+            Session.set('spotYelpObj', spot.yelpObj);
+          }
+          
         }
         
       });
@@ -109,15 +112,13 @@ Template.createSpotDialog.events({
   },
 
   'click a': function (evt, template) {
-    // console.log('click');
-    Session.set("restItemClicked", true)
-    // console.log(evt.target.id);
-    // var restName = template.find("a").firstChild.nextSibling.data;
+    Session.set('showSpotSave', true);
+    Session.set("restItemClicked", true);
+    //Yelp Restaurant ID
     var restID = evt.target.id;
-    // console.log(restID);
     Session.set('selectedYelpID', restID);
+    //This is the Yelp Obj
     theResult = Session.get('yelpResult');
-    // console.log(theResult);
     theResult.forEach(function(result){
       if (result.id == restID){
         Session.set('selectedYelpResult', result);
@@ -143,6 +144,10 @@ Template.createSpotDialog.helpers({
     if (Session.get('restItemClicked')){
       return 'selected' 
     }
+  },
+
+  showSpotSave: function(){
+    return Session.get('showSpotSave');
   },
 
   // selectedYelpResult: function(){

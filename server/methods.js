@@ -27,43 +27,19 @@ ServiceConfiguration.configurations.insert({
   // createClient('5d38e4277bc0461f8fa6283e68f85258', '6caefe9e0df64e668de79b9269b87214');
   /* OPTIONS: { [min_tag_id], [max_tag_id] }; */
 
+// ServiceConfiguration.configurations.remove({service: "InstagramAPI"});
+// ServiceConfiguration.configurations.insert({
+//   service: "InstagramAPI",
+//   CLIENT_ID: "5d38e4277bc0461f8fa6283e68f85258",
+//   CLIENT_SECRET: "6caefe9e0df64e668de79b9269b87214",
+// });
 
-/* OPTIONS: { [count], [min_id], [max_id] }; */
-ig.user_self_feed([count=5], function(err, medias, pagination, remaining, limit) {
-  if(!err){
-    console.log('hiiiiiiii')
-    console.log(medias);
-    }else{
-      console.log(err.message);
-    }
-});
+// var ig = Meteor.require('instagram-node').instagram();
 
-
-Spots.allow({
-  insert: function (userId, party) {
-    return false; // no cowboy inserts -- use createParty method
-  },
-  update: function (userId, spot, fields, modifier) {
-    if (userId !== spot.owner)
-      return false; // not the owner
-
-    var allowed = ["title", "description", "latlng", 'owner', 'eventID', 'public', 'invited', 'rsvps'];
-    if (_.difference(fields, allowed).length)
-      return false; // tried to write to forbidden field
-
-    // A good improvement would be to validate the type of the new
-    // value of the field (and if a string, the length.) In the
-    // future Meteor will have a schema system to makes that easier.
-    return true;
-  },
-  remove: function (userId, spot) {
-    // You can only remove parties that you created and nobody is going to.
-    return spot.owner === userId;
-  }
-});
-
+// var Fiber = Npm.require('fibers');
 
 Meteor.methods({
+
   createEvent: function(options){
     options = options || {};
     if (! (typeof options.title === "string" && options.title.length &&
@@ -90,9 +66,25 @@ Meteor.methods({
       city: options.city,
       state: options.state,
       latlng: [cityLatLng[0].latitude, cityLatLng[0].longitude],
+      instaObj: '',
+      rsvps: 0,
+      rsvpd: [],
+      tag: options.tag,
     });
   },
 
+  lookupZip: function(city, state){
+    try{
+      var zips = Zipcodes.lookupByName(city, state);
+    } 
+    catch (error){
+      console.log('lookupZip Error');
+      return false;
+    }
+    finally{
+      return zips;
+    }
+  },
 
   // options should include: name, description, x, y, public
   createSpot: function (options) {
@@ -152,6 +144,24 @@ Meteor.methods({
     });
   },
 
+  updateRsvp: function (options) {
+    options = options || {};
+    if (! options.currentUser )
+      throw new Meteor.Error(400, "Required parameter missing");
+    if (! this.userId)
+      throw new Meteor.Error(403, "You must be logged in");
+    // console.log(options.spotID);
+    return Events.update({permalink: options.permalink},{
+      $inc:{
+        rsvps: 1,
+      },
+      $push:{
+        rsvpd: options.currentUser,
+      }
+      
+    });
+  },
+
   deleteSpot: function (options) {
     options = options || {};
     return Spots.remove(options.spotID);
@@ -206,5 +216,46 @@ Meteor.methods({
    getProfile: function(str) {
       return Meteor.user({_id:Meteor.userId()});
    },
+
+   updateInsta: function(eventID, instaObj){
+      return Events.update(eventID._id,{
+            $push:{
+              instaObj: instaObj,
+            }
+      });
+   },
+
+   searchInsta: function(permalink){
+      var cEvent = Events.findOne({permalink: permalink});
+      var tag = cEvent.tag;
+      console.log(cEvent);
+      console.log(tag);
+      ig.tag_media_recent(tag, function(err, medias, pagination, remaining, limit) {
+        if(!err){
+          // console.log('hiiiiiiii')
+          // console.log( medias);
+          var instaObj = []
+          medias.forEach(function(media){
+          // console.log(image.images.standard_resolution);
+            instaObj.push({
+              imgID: media.id,
+              user: media.user.username, 
+              profile: media.user.profile_picture,
+              location: media.location,
+              likes: media.likes.count,
+              link: media.link, 
+              caption: media.caption, 
+              standard: media.images.standard_resolution.url,
+            });
+          });
+        }else{
+          console.log(err.message);
+        }
+      });   
+
+      Meteor.call('updateInsta', cEvent, instaObj);
+      return medias;
+  },
+
 
 });
