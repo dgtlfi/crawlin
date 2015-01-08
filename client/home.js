@@ -37,7 +37,7 @@ Instagram.Template.Views = {
   }
   
   function search (user_id) {
-    var url = "https://api.instagram.com/v1/users/" + user_id + "/media/recent?callback=?&amp;client_id=5d38e4277bc0461f8fa6283e68f85258&count=4"
+    var url = "https://api.instagram.com/v1/users/" + user_id + "/media/recent?callback=?&amp;client_id=5d38e4277bc0461f8fa6283e68f85258&q=crawlin2015&count=4"
     $.getJSON (url, toScreen);
     console.log(user_id);
   }
@@ -69,7 +69,8 @@ Instagram.Template.Views = {
   Instagram.search = search;
 })();
 
-Instagram.search ('573548614');
+Instagram.search ('1265305009');
+// Instagram.search ('979982');
 
 
 
