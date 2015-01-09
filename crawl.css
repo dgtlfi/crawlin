@@ -25,6 +25,10 @@ div.photo {
 .selected {
   background-color: #e7e7e7;
 }
+
+.rsvps{
+    color: #6495ED;
+}
 /*
 .mask {
     position: absolute;
@@ -61,10 +65,11 @@ div.photo {
     /*background: #49AFCD;*/
     /*Conflower Blue*/
     /*background: #6495ED;*/
-    /*Lime Green*/
-    /*background: #32CD32;*/
-    /*Black*/
-    background: #000;
+    background: #ddbb00;
+    /*Lime Green*//*
+    background: #32CD32;
+    /*Black*//*
+    background: #000;*/
 }
 
 .leaflet-div-icon.private {
