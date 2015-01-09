@@ -1,4 +1,27 @@
 /* CSS declarations go here */
+/*body {
+    font-family: 'Titillium Web', sans-serif;
+}*/
+
+div.photo {
+    width: 270px;
+    float: left;
+    background: #FFFFDE;
+    margin: 5px;
+}
+
+.photo img {
+    position: relative;
+        top: 10px;
+        left: 10px;
+}
+
+.photo p {
+    padding: 10px;
+    width: 240px;
+    word-wrap: normal;
+}
+
 .selected {
   background-color: #e7e7e7;
 }
