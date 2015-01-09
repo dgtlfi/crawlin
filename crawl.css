@@ -6,18 +6,16 @@
 div.photo {
     width: 270px;
     float: left;
-    background: #FFFFDE;
     margin: 5px;
 }
 
 .photo img {
-    position: relative;
-        top: 10px;
-        left: 10px;
+
 }
 
 .photo p {
-    padding: 10px;
+    font-size: 18px;
+    padding: 5px;
     width: 240px;
     word-wrap: normal;
 }
@@ -64,7 +62,7 @@ div.photo {
     /*Lime Green*/
     /*background: #32CD32;*/
     /*Black*/
-    background: #000;
+    background: #ddbb00;
 }
 
 .leaflet-div-icon.private {
