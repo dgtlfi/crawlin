@@ -61,6 +61,7 @@ Template.rsvp.helpers({
 
 });
 
+
 Template.rsvp.rendered = function(){
   var currentUser = Meteor.user();
   var permalink = Session.get('selectedPerm');

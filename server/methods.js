@@ -38,6 +38,55 @@ ServiceConfiguration.configurations.insert({
 
 // var Fiber = Npm.require('fibers');
 
+Accounts.onCreateUser(function(options, user) {
+  user.profile = {};
+
+  // we wait for Meteor to create the user before sending an email
+  Meteor.setTimeout(function() {
+    Accounts.sendVerificationEmail(user._id);
+  }, 2 * 1000);
+
+  return user;
+});
+
+var instaSearch = function(tag){
+  ig.tag_media_recent(tag, function(err, medias, pagination, remaining, limit) {
+    if(!err){
+      // console.log('hiiiiiiii')
+      // console.log( medias);
+      var instaObj = []
+      medias.forEach(function(media){
+        // console.log(media.images.standard_resolution);
+        instaObj.push({
+          imgID: media.id,
+          user: media.user.username, 
+          profile: media.user.profile_picture,
+          location: media.location,
+          likes: media.likes.count,
+          link: media.link, 
+          caption: media.caption, 
+          standard: media.images.standard_resolution.url,
+        });
+      });
+      console.log(instaObj);
+      return instaObj;
+    }else{
+      console.log(err.message);
+    }
+  });   
+}
+
+
+
+// Accounts.validateLoginAttempt(function(attempt){
+//   if (attempt.user && attempt.user.emails && !attempt.user.emails[0].verified ) {
+//     console.log('email not verified');
+
+//     return false; // the login is aborted
+//   }
+//   return true;
+// }); 
+
 Meteor.methods({
 
   createEvent: function(options){
@@ -70,6 +119,10 @@ Meteor.methods({
       rsvps: 0,
       rsvpd: [],
       tag: options.tag,
+      startTime: options.startTime,
+      startPM: options.startPM,
+      endTime: options.endTime,
+      endPM: options.endPM,
     });
   },
 
@@ -225,36 +278,14 @@ Meteor.methods({
       });
    },
 
-   searchInsta: function(permalink){
-      var cEvent = Events.findOne({permalink: permalink});
-      var tag = cEvent.tag;
-      console.log(cEvent);
+   searchInsta: function(tag){
+      // var cEvent = Events.findOne({permalink: permalink});
+      // var tag = cEvent.tag;
+      // console.log(cEvent);
       console.log(tag);
-      ig.tag_media_recent(tag, function(err, medias, pagination, remaining, limit) {
-        if(!err){
-          // console.log('hiiiiiiii')
-          // console.log( medias);
-          var instaObj = []
-          medias.forEach(function(media){
-          // console.log(image.images.standard_resolution);
-            instaObj.push({
-              imgID: media.id,
-              user: media.user.username, 
-              profile: media.user.profile_picture,
-              location: media.location,
-              likes: media.likes.count,
-              link: media.link, 
-              caption: media.caption, 
-              standard: media.images.standard_resolution.url,
-            });
-          });
-        }else{
-          console.log(err.message);
-        }
-      });   
-
-      Meteor.call('updateInsta', cEvent, instaObj);
-      return medias;
+      instaObj = instaSearch(tag);
+      // Meteor.call('updateInsta', cEvent, instaObj);
+      console.log(instaObj);
   },
 
 
