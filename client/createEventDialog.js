@@ -66,6 +66,16 @@ Template.createEventDialog.events({
     var startPM = template.find(".startPM").checked;
     var endPM = template.find(".endPM").checked;
 
+    if (startPM){
+      var finalStartTime = (startTime + "pm"); 
+    } else{
+      var finalStartTime = (startTime + "am");
+    }
+    if (endPM){
+      var finalEndTime = (endTime + "pm"); 
+    } else{
+      var finalEndTime = (endTime + "am");
+    }
 
     if (title.length && description.length) {
       Meteor.call('createEvent', {
@@ -76,10 +86,8 @@ Template.createEventDialog.events({
         public: public,
         city: city,
         state: state,
-        startTime: startTime,
-        startPM: startPM,
-        endTime: endTime,
-        endPM: endPM,
+        startTime: finalStartTime,
+        endTime: finalEndTime,
         tag: tag,
       }, function (error, template) {
         if (! error) {
