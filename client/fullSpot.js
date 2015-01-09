@@ -61,7 +61,6 @@ Template.rsvp.helpers({
 
 });
 
-<<<<<<< HEAD
 Template.feed.rendered = function () {
   var permalink = Session.get('selectedPerm');
   var hashtag = Events.findOne({permalink:permalink}, {tag:1});
@@ -126,8 +125,6 @@ Template.feed.rendered = function () {
       Instagram.search (hashtag.tag);
   }
 }
-=======
->>>>>>> fdbd5c6c054d672c091de1d86108eb4ecf2203e7
 
 Template.rsvp.rendered = function(){
   var currentUser = Meteor.user();
