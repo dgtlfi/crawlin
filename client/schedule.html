@@ -1,30 +1,72 @@
 <template name = 'schedule'>
-  {{#if showCreateEventDialog}}
-    {{> createEventDialog}}
-  {{/if}}
   <div class='row'>
-    
-    <div class="col-sm-4">
-      <h2>Schedule</h2>
-      <ul>
-        {{#each crawlList}}
-          <li class="scheduleList {{ maybeSelected }}"> <!-- Add "selected" class (if selected) -->
-            <a href="{{ pathFor 'crawls' }}"> {{title}} </a>
-          </li>
-        {{/each}}
-      </ul>
+    <div class="col-sm-8">
+      <h2>Upcoming Events</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th><th>Date</th><th>Start Time</th><th>RSVPs</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each crawlList}}
+            <tr>
+              <td><a href="{{pathFor 'crawls'}}">{{title}}</a></td>
+              <td>{{date}}</td>
+              <td>{{finalStartTime}}</td>
+              <td>{{rsvps}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
     </div>
-    {{#if currentUser}}
-      <div class="col-sm-4">
-        <br />
-        <button type="button" class="btn btn-primary btn-sm createEvent" data-toggle="myModal" data-target="#myModal">
-          Create New Event
-        </button>
-        <button type="button" class="btn btn-primary btn-sm createEvent" data-toggle="myModal" data-target="#myModal">
-          Edit Event
-        </button>
-      </div>
-    {{/if}}
+  </div>
 
+  <!-- Recent -->
+  <div class='row'>
+    <div class="col-sm-8">
+      <h2>Most Recent Events</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th><th>Date</th><th>Start Time</th><th>RSVPs</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each recentList}}
+            <tr>
+              <td><a href="{{pathFor 'crawls'}}">{{title}}</a></td>
+              <td>{{date}}</td>
+              <td>{{finalStartTime}}</td>
+              <td>{{rsvps}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>   
+    </div>
+  </div>
+
+  <!-- ALL -->
+  <div class='row'>
+    <div class="col-sm-8">
+      <h2>All Public Events</h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th><th>Date</th><th>Start Time</th><th>RSVPs</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each fullList}}
+            <tr>
+              <td><a href="{{pathFor 'crawls'}}">{{title}}</a></td>
+              <td>{{date}}</td>
+              <td>{{finalStartTime}}</td>
+              <td>{{rsvps}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>   
+    </div>
   </div>
 </template>

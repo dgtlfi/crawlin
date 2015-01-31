@@ -8,7 +8,6 @@ mizzao:bootstrap-3
 iron:router
 mrt:leaflet
 accounts-password
-mrt:accounts-ui-bootstrap-3
 peppelg:bootstrap-3-modal
 rajit:bootstrap3-datepicker
 service-configuration
@@ -16,3 +15,5 @@ oauth1
 mrt:zipcodes
 timbroddin:instagram-node
 mrt:moment
+ian:accounts-ui-bootstrap-3
+rubaxa:sortable

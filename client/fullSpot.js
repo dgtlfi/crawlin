@@ -1,30 +1,5 @@
 
 
-Template.crawls.helpers({
-  showCreateDialog: function () {
-    Session.set('currentModal', 'createModal');
-    Modal.show('createModal')
-    return Session.get("showCreateDialog");
-  },
-  showEditContentDialog: function () {
-    Session.set('currentModal', 'createModal');
-    Modal.show('createModal')
-    return Session.get("showEditContentDialog");
-  },
-
-  
-
-});
-
-Template.createNew.helpers({
-  showSpotDialog: function(){
-    Session.set('currentModal', 'createModal');
-    Modal.show('createModal')
-    return Session.get("showCreateSpotDialog");
-  },
-
-});
-
 Template.createNew.events({
   'click a.createNewSpot': function(event, template){
     Session.set('showCreateSpotDialog', true);
@@ -35,20 +10,14 @@ Template.createNew.events({
 
 Template.rsvp.helpers({
   showRsvpDialog: function(){
-    Session.set('currentModal', 'rsvpModal');
-    Modal.show('rsvpModal')
     return Session.get("showRsvpDialog");
   },
 
   showRsvpError: function(){
-    Session.set('currentModal', 'rsvpErrorModal');
-    Modal.show('rsvpErrorModal')
     return Session.get("showRsvpError");
   },
 
   show_LoginDialog: function(){
-    Session.set('currentModal', 'loginModal');
-    Modal.show('loginModal')
     return Session.get("show_LoginDialog");
   },
 
@@ -61,7 +30,6 @@ Template.rsvp.helpers({
 
 });
 
-<<<<<<< HEAD
 Template.feed.rendered = function () {
   var permalink = Session.get('selectedPerm');
   var hashtag = Events.findOne({permalink:permalink}, {tag:1});
@@ -93,7 +61,6 @@ Template.feed.rendered = function () {
           function search (hashtag) {
           var url = "https://api.instagram.com/v1/tags/" + hashtag + "/media/recent?callback=?&amp;client_id=5d38e4277bc0461f8fa6283e68f85258"
           $.getJSON (url, toScreen);
-          console.log(hashtag);
         }
 
         function toTemplate(photo) {
@@ -123,11 +90,10 @@ Template.feed.rendered = function () {
         Instagram.search = search;
       })();
 
-      Instagram.search (hashtag.tag);
+      Instagram.search(hashtag.tag);
   }
 }
-=======
->>>>>>> fdbd5c6c054d672c091de1d86108eb4ecf2203e7
+
 
 Template.rsvp.rendered = function(){
   var currentUser = Meteor.user();
@@ -142,13 +108,21 @@ Template.rsvp.events({
   'click .RSVP': function(event, template){
     var currentUser = Meteor.user();
     var permalink = Session.get('selectedPerm');
+    
+
     if (! currentUser){
+      
+      Session.set('currentModal', 'showLoginDialog');
       Session.set('show_LoginDialog', true);
+      Modal.show('showLoginDialog');
+      
     }else{
       var alreadyRsvpd = Events.findOne({permalink:permalink, rsvpd: currentUser})
       if (alreadyRsvpd){
         Session.set('disableRsvp', true);
         Session.set('showRsvpError', true);
+        Session.set('currentModal', 'createRsvpError');
+        Modal.show('createRsvpError');
       } else{ 
         Meteor.call('updateRsvp', {
           currentUser: currentUser,
@@ -157,6 +131,8 @@ Template.rsvp.events({
             if(!error){
               Session.set('showRsvpDialog', true);
               Session.set('disableRsvp', true);
+              Session.set('currentModal', 'createRsvpDialog');
+              Modal.show('createRsvpDialog');
             }
           }
           
@@ -186,26 +162,10 @@ Template.spotDetails.helpers({
 Template.spotYelpInfo.helpers({
 
   yes: function(){
+
       spotYelpObj = Session.get('spotYelpObj');
       return spotYelpObj;
     
     },
 });
 
-
-
-// Template.feed.helpers({
-
-// });
-
-// Template.feed.rendered =  function(){
-
-//   var selectedPerm = Session.get('selectedPerm');
-//   console.log('hiInsta');
-//   // var result = Meteor.call('searchInsta', selectedPerm);
-//   Meteor.call('searchInsta', selectedPerm, function(error, result) {
-//     console.log(error);
-//     console.log(result);
-           
-//   });
-// }

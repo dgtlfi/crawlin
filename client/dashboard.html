@@ -1,0 +1,109 @@
+<template name="dash_layout">
+  <div class="container">
+    <header>
+      {{> nav }}
+    </header>
+
+    <sideNav>
+      {{> dashboard}}
+    </sideNav>
+
+  </div>
+</template>
+
+<template name = 'dashboard'>
+  <div class="row">
+    <div class="col-sm-3">
+        <!-- left -->
+        <h3>
+          <i class="glyphicon glyphicon-briefcase"></i> Dashboard
+        </h3>
+        <hr>
+        
+        <ul class="nav nav-stacked">
+          <li>
+            <a href="/dashboard/{{currentUserID}}/metrics">
+              <i class="glyphicon glyphicon-signal"></i> Metrics</a>
+          </li>
+          <li>
+            <a href="/dashboard/{{currentUserID}}/events">
+              <i class="glyphicon glyphicon-globe"></i> My Events</a>
+          </li>
+          <li>
+            <a href="/dashboard/{{currentUserID}}/create" class="createNewEvent">
+              <i class="glyphicon glyphicon-plus"></i> Create New Event</a>
+          </li>
+          <li>
+            <a href="/dashboard/{{currentUserID}}/profile" class="createNewEvent">
+              <i class="glyphicon glyphicon-user"></i> Profile</a>
+          </li>
+        </ul>
+        
+        <hr>
+      
+    </div>
+    <div class="col-sm-9">
+      
+      <content>
+        {{#if showDeleteEventDialog}}
+          {{> deleteEventDialog}}
+        {{/if}}
+
+        {{> yield 'content'}}
+      </content>
+    </div>
+
+  </div> 
+
+</template>
+
+<template name="myEvents">
+  <h3>All Events</h3>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th><th>Date</th><th>Start Time</th><th>RSVPs</th><th>Edit?</th><th>Delete?</th>
+      </tr>
+    </thead>
+    <tbody >
+      {{#each selectedEvents}}
+        <tr id="{{_id}}">
+          <td><a href="{{pathFor 'crawls'}}">{{title}}</a></td>
+          <td>{{date}}</td>
+          <td>{{startTime}}</td>
+          <td>{{rsvpCount}}</td>
+          <td>
+            <a class="btn btn-info editEvent" href="/dashboard/{{owner}}/edit/{{_id}}" id="{{_id}}" role="button"></a>
+          </td>
+          <td>
+            <a class="btn btn-danger deleteEvent" href="#" id="{{_id}}" role="button"></a>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+      
+</template>
+
+<template name="metrics">
+  <h3>Metrics</h3>
+    <div class="col-sm-6">
+      <h3>Coming Soon!</h3>
+
+    </div>
+
+  
+      
+</template>
+
+<template name="profile">
+  <h3>Profile</h3>
+    <div class="col-sm-6">
+      <h3>Coming Soon!</h3>
+
+    </div>
+
+  
+      
+</template>
+

@@ -1,42 +1,37 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Create Party dialog
 
-Template.editContentDialog.events({
+Template.editSpotDialog.events({
   'click .save': function (event, template) {
     
-    var name = template.find(".name").value;
+    var eventID = Session.get('selectedEvent');
+    var yelpID = Session.get('selectedYelp');
     var description = template.find(".description").value;
-    var public = ! template.find(".private").checked;
-    // var latlng = Session.get("createCoords");
-    // var eventID = Session.get('selectedEvent')._id;
-    // var permalink = Session.get('selectedPerm');
-    var number = template.find(".number").value;
-    var spotID = Session.get('selectedSpot');
+    // var public = ! template.find(".private").checked;
     // console.log(spotID);
-    // console.log(number);
+    // console.log(description);
 
 
-    if (name.length && description.length) {
+    if (typeof description === "string" && description.length) {
       Meteor.call('updateSpot', {
-        spotID: spotID,
-        name: name,
+        yelpID: yelpID,
+        eventID: eventID,
         description: description,
-        // latlng: latlng,
-        public: public,
-        // eventID: eventID,
-        // permalink: permalink,
-        number: number,
-      });
-      // function (error, template) {
-      //   if (! error) {
-      //     // console.log('createSpot Error')
-      //     // console.log(this._id);
+        // public: public,
+      }, function (error, response) {
+        if (! error) {
+          // console.log('createSpot Error')
+          // console.log(this._id);
+          // console.log(response);
+          $('body').removeClass('modal-open');
+          Modal.hide(Session.get('currentModal'));
+          Session.set("showEditSpotDialog", false);
           
-      //   }
-      // )};
-      $('body').removeClass('modal-open');
-      Modal.hide(Session.get('currentModal'));
-      Session.set("showEditContentDialog", false);
+        }else{
+          console.log(error);
+        }
+      });
+      
     } else {
       Session.set("createError",
                   "It needs a Name and a Description");
@@ -66,7 +61,7 @@ Template.editContentDialog.events({
   }
 });
 
-Template.editContentDialog.helpers({
+Template.editSpotDialog.helpers({
   createError: function(){
     return Session.get("createError");
   },

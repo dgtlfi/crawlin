@@ -1,8 +1,4 @@
 Template.schedule.events({
-  'click .createEvent': function (event, template) {
-    Session.set("showCreateEventDialog", true);
-    Session.set("createError", false);
-  },
 
   'click a': function(){
     Session.set('selectedSpot', null);
@@ -17,10 +13,12 @@ Template.schedule.helpers({
     return currentRoute &&
       this._id === currentRoute.params._id ? 'selected' : '';
   },
-  showCreateEventDialog: function () {
-    Modal.show('createEventModal')
-    Session.set('currentModal', 'createEventModal');
-    return Session.get("showCreateEventDialog");
-  },
+  
+  // showStates: function(){
+  //   var state = Meteor.call('getState', 'DC', function(error, result){
+  //     console.log(result);
+  //     return result;
+  //   });
+  // }
 
 });

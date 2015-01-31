@@ -60,7 +60,9 @@ div.photo {
     vertical-align:middle;
 }
 
-.leaflet-div-icon.public {
+/*add.public when we add public/private again*/
+
+.leaflet-div-icon {
 	/*Original Blue*/
     /*background: #49AFCD;*/
     /*Conflower Blue*/
@@ -68,13 +70,13 @@ div.photo {
     background: #ddbb00;
     /*Lime Green*//*
     background: #32CD32;
-    /*Black*//*
-    background: #000;*/
+    /*Black*/
+    /*background: #000;*/
 }
 
-.leaflet-div-icon.private {
+/*.leaflet-div-icon.private {
     background: #DA4F49;
-}
+}*/
 
 .invite-row .invite {
     margin: 10px 10px 10px 0;
@@ -127,3 +129,27 @@ hr {
     border-width: 1px;
 } 
 
+/* make sidebar nav vertical */ 
+@media (min-width: 768px) {
+  .sidebar-nav .navbar .navbar-collapse {
+    padding: 0;
+    max-height: none;
+  }
+  .sidebar-nav .navbar ul {
+    float: none;
+  }
+  .sidebar-nav .navbar ul:not {
+    display: block;
+  }
+  .sidebar-nav .navbar li {
+    float: none;
+    display: block;
+  }
+  .sidebar-nav .navbar li a {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+}
+
+
+  

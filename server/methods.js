@@ -12,6 +12,63 @@ var getYelpOauthBinding = function(url) {
     }
 }
 
+var findStates = function(abr){
+  states = {
+    AK: 'Alabama',
+    AL: 'Alaska',
+    AR: 'Arizona',
+    AZ: 'Arkansas',
+    CA: 'California',
+    CO: 'Colorado',
+    CT: 'Connecticut',
+    DC: 'District of Columbia',
+    DE: 'Delaware',
+    FL: 'Florida',
+    GA: 'Georgia',
+    HI: 'Hawaii',
+    IA: 'Idaho',
+    ID: 'Illinois',
+    IL: 'Indiana',
+    IN: 'Iowa',
+    KS: 'Kansas',
+    KY: 'Kentucky',
+    LA: 'Louisiana',
+    MA: 'Maine',
+    MD: 'Maryland',
+    ME: 'Massachusetts',
+    MI: 'Michigan',
+    MN: 'Minnesota',
+    MO: 'Mississippi',
+    MS: 'Missouri',
+    MT: 'Montana',
+    NC: 'Nebraska',
+    ND: 'Nevada',
+    NE: 'New Hampshire',
+    NH: 'New Jersey',
+    NJ: 'New Mexico',
+    NM: 'New York',
+    NV: 'North Carolina',
+    NY: 'North Dakota',
+    OH: 'Ohio',
+    OK: 'Oklahoma',
+    OR: 'Oregon',
+    PA: 'Pennsylvania',
+    RI: 'Rhode Island',
+    SC: 'South Carolina',
+    SD: 'South Dakota',
+    TN: 'Tennessee',
+    TX: 'Texas',
+    UT: 'Utah',
+    VA: 'Vermont',
+    VT: 'Virginia',
+    WA: 'Washington',
+    WI: 'West Virginia',
+    WV: 'Wisconsin',
+    WY: 'Wyoming',
+  }
+  console.log(states.abr);
+  return states.abr;
+}
 
 
 
@@ -49,43 +106,28 @@ Accounts.onCreateUser(function(options, user) {
   return user;
 });
 
-var instaSearch = function(tag){
-  ig.tag_media_recent(tag, function(err, medias, pagination, remaining, limit) {
-    if(!err){
-      // console.log('hiiiiiiii')
-      // console.log( medias);
-      var instaObj = []
-      medias.forEach(function(media){
-        // console.log(media.images.standard_resolution);
-        instaObj.push({
-          imgID: media.id,
-          user: media.user.username, 
-          profile: media.user.profile_picture,
-          location: media.location,
-          likes: media.likes.count,
-          link: media.link, 
-          caption: media.caption, 
-          standard: media.images.standard_resolution.url,
-        });
-      });
-      console.log(instaObj);
-      return instaObj;
-    }else{
-      console.log(err.message);
-    }
-  });   
-}
 
 
 
-// Accounts.validateLoginAttempt(function(attempt){
-//   if (attempt.user && attempt.user.emails && !attempt.user.emails[0].verified ) {
-//     console.log('email not verified');
+// var loginAttemptVerifier = function(parameters) {
+//   if (parameters.user && parameters.user.emails && (parameters.user.emails.length > 0)) {
+//     // return true if verified email, false otherwise.
+//     var found = _.find(
+//                        parameters.user.emails, 
+//                        function(thisEmail) { return thisEmail.verified }
+//                       );
 
-//     return false; // the login is aborted
+//     if (!found) {
+//       throw new Meteor.Error(500, 'We sent you an email.');
+//     }
+//     return found && parameters.allowed;
+//   } else {
+//     console.log("user has no registered emails.");
+//     return false;
 //   }
-//   return true;
-// }); 
+// }
+// Accounts.validateLoginAttempt(loginAttemptVerifier);
+  
 
 Meteor.methods({
 
@@ -101,32 +143,40 @@ Meteor.methods({
       throw new Meteor.Error(413, "Description too long");
     if (! this.userId)
       throw new Meteor.Error(403, "You must be logged in");
-
+    // console.log(options.city);
+    console.log(options.city);
+    console.log(options.state);
     var cityLatLng = Zipcodes.lookupByName(options.city, options.state);
-    // console.log(cityLatLng);
+    // var longState = findStates(options.state);
 
     return Events.insert({
       owner: this.userId,
       title: options.title,
       date: options.date,
+      dbDate: options.dbDate,
       permalink: options.permalink,
       description: options.description,
-      public: !! options.public,
+      publicEvt: !! options.public,
       city: options.city,
       state: options.state,
+      // longState: longState,
       latlng: [cityLatLng[0].latitude, cityLatLng[0].longitude],
-      instaObj: '',
-      rsvps: 0,
+      spotCount: 0,
+      spots: [],
+      rsvpCount: 0,
       rsvpd: [],
       tag: options.tag,
       startTime: options.startTime,
       startPM: options.startPM,
+      finalStartTime: options.finalStartTime,
       endTime: options.endTime,
       endPM: options.endPM,
+      finalEndTime: options.finalEndTime,
     });
   },
 
   lookupZip: function(city, state){
+    
     try{
       var zips = Zipcodes.lookupByName(city, state);
     } 
@@ -153,48 +203,121 @@ Meteor.methods({
     if (! this.userId)
       throw new Meteor.Error(403, "You must be logged in");
 
-    // console.log(options.latlng);
+    console.log(options.latlng);
     return Spots.insert({
       owner: this.userId,
       latlng: options.latlng,
       name: options.name,
       yelpID: options.yelpID,
-      // eventID: options.eventID,
+      eventID: options.eventID,
       permalink: options.permalink,
       description: options.description,
-      public: !! options.public,
+      // public: !! options.public,
       number: options.number,
-      invited: [],
-      rsvps: [],
       yelpObj: options.yelpObj,
     });
+    // var oldCount = Events.findOne({_id:options.eventID}, {fields: {spotCount:1}});
+    // var newCount = oldCount.spotCount + 1;
+
+    // return Events.update({_id:options.eventID},{
+    //   $inc:{
+    //     spotCount: 1,
+    //   },
+    //   $push:{
+    //     spots: {
+    //       owner: this.userId,
+    //       name: options.name,
+    //       description: options.description,
+    //       latlng: options.latlng,
+    //       number: newCount,
+    //       yelpID: options.yelpID,
+    //       yelpObj: options.yelpObj,
+    //     }
+    //   }
+    // })
   },
 
-  updateSpot: function (options) {
+  updateEvent: function (options) {
     options = options || {};
-    if (! (typeof options.name === "string" && options.name.length &&
+    if (! (typeof options.title === "string" && options.title.length &&
            typeof options.description === "string" &&
            options.description.length))
       throw new Meteor.Error(400, "Required parameter missing");
-    if (options.name.length > 100)
+    if (options.title.length > 100)
       throw new Meteor.Error(413, "Title too long");
     if (options.description.length > 1000)
       throw new Meteor.Error(413, "Description too long");
     if (! this.userId)
       throw new Meteor.Error(403, "You must be logged in");
     // console.log(options.spotID);
-    console.log(options.number);
-    return Spots.update(options.spotID,{
-      $set:{
-        name: options.name,
-        //yelpID: options.yelpID
-        // eventID: options.eventID,
+    // console.log(options.number);
+    return Events.update(options.eventID, { 
+      $set: {
+        title: options.title,
         description: options.description,
-        public: !! options.public,
-        number: options.number,
+        permalink: options.permalink,
+        date: options.date,
+        dbDate: options.dbDate,
+        publicEvt: options.public, 
+        city: options.city,
+        state: options.state,
+        startTime: options.startTime,
+        startPM: options.startPM,
+        finalStartTime: options.finalStartTime,
+        endTime: options.endTime,
+        endPM: options.endPM,
+        finalEndTime: options.finalEndTime,
+        tag: options.tag,
+      }
+    });
+  },
+
+  updateSpot: function (options) {
+    options = options || {};
+    if (! ( typeof options.description === "string"))
+      throw new Meteor.Error(400, "Required parameter missing");
+    if (options.description.length > 1000)
+      throw new Meteor.Error(413, "Description too long");
+    if (! this.userId)
+      throw new Meteor.Error(403, "You must be logged in");
+    console.log(options.eventID);
+    console.log(options.yelpID);
+    return Spots.update({eventID: options.eventID, yelpID: options.yelpID},{
+      $set:{
+        description: options.description,
+        // number: options.number,
       }
       
     });
+  },
+
+  updateSpotNumber: function (_id, newNumber) {
+    // permalink = permalink || {};
+    if (! (typeof _id === "string" && typeof newNumber === "string" ))
+      throw new Meteor.Error(400, "Required parameter missing");
+    if (! this.userId)
+      throw new Meteor.Error(403, "You must be logged in");
+    // console.log(_id);
+    // console.log(newNumber);
+    // console.log(newPermalink);
+    return Spots.update({_id: _id},
+      { $set: { number: newNumber } }
+      // { multi: true }
+    );
+  },
+  updateSpotPermalink: function (owner, oldPermalink, newPermalink) {
+    // permalink = permalink || {};
+    if (! (typeof owner === "string" && typeof oldPermalink === "string" && typeof newPermalink === "string"))
+      throw new Meteor.Error(400, "Required parameter missing");
+    if (! this.userId)
+      throw new Meteor.Error(403, "You must be logged in");
+    console.log(owner);
+    console.log(oldPermalink);
+    console.log(newPermalink);
+    return Spots.update({owner: owner, permalink: oldPermalink},
+      { $set: { permalink: newPermalink } }, 
+      { multi: true }
+    );
   },
 
   updateRsvp: function (options) {
@@ -206,7 +329,7 @@ Meteor.methods({
     // console.log(options.spotID);
     return Events.update({permalink: options.permalink},{
       $inc:{
-        rsvps: 1,
+        rsvpCount: 1,
       },
       $push:{
         rsvpd: options.currentUser,
@@ -215,9 +338,18 @@ Meteor.methods({
     });
   },
 
-  deleteSpot: function (options) {
+  deleteEvent: function (options) {
     options = options || {};
-    return Spots.remove(options.spotID);
+    console.log('Deleting: ');
+    console.log(options);
+    return Events.remove(options.eventID);
+  },
+
+  deleteSpot: function (spot) {
+    spot = spot || {};
+    console.log('Deleting: ');
+    console.log(spot);
+    return Spots.remove({_id: spot});
   },
 
   searchYelp: function(search, isCategory, city, latitude, longitude) {
@@ -260,33 +392,22 @@ Meteor.methods({
      return oauthBinding.get(url, parameters);
    },
 
-   getLatLng: function(adr){
-      var geo = new GeoCoder();
-      var result = geo.geocode(adr);
-      return result;
-   },
 
    getProfile: function(str) {
       return Meteor.user({_id:Meteor.userId()});
    },
 
-   updateInsta: function(eventID, instaObj){
-      return Events.update(eventID._id,{
-            $push:{
-              instaObj: instaObj,
-            }
-      });
-   },
+   // updateInsta: function(eventID, instaObj){
+   //    return Events.update(eventID._id,{
+   //          $push:{
+   //            instaObj: instaObj,
+   //          }
+   //    });
+   // },
 
-   searchInsta: function(tag){
-      // var cEvent = Events.findOne({permalink: permalink});
-      // var tag = cEvent.tag;
-      // console.log(cEvent);
-      console.log(tag);
-      instaObj = instaSearch(tag);
-      // Meteor.call('updateInsta', cEvent, instaObj);
-      console.log(instaObj);
-  },
-
+   getState: function(abr){
+      console.log(findStates[abr]);
+      return findStates[abr];
+   }
 
 });

@@ -1,19 +1,22 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Create Party dialog
 
-Template.createSpotDialog.events({
+Template.createNewSpotDialog.events({
   'click .save': function (event, template) {
     result = Session.get('selectedYelpResult');
-    count = Spots.find({permalink: Session.get('selectedPerm')}, {fields: {id:1}}).count();
+    eventID = Session.get('selectedEvent');
+    // console.log(eventID);
+    count = Spots.find({eventID: eventID}, {fields: {id:1}}).count();
 
     var name = result.name;
     var yelpID = result.id;
     var description = template.find(".description").value;
-    var public = ! template.find(".private").checked;
+    // var public = ! template.find(".private").checked;
     var lat = result.location.coordinate.latitude;
     var lng = result.location.coordinate.longitude;
     var latlng = {lat:lat, lng:lng};
-    var permalink = Session.get('selectedPerm');
+    var evt = Events.findOne({_id: eventID});
+    Session.set('selectedPerm', evt.permalink);
     var number = (parseInt(count)+1).toString();
 
     if (name.length && description.length) {
@@ -22,27 +25,21 @@ Template.createSpotDialog.events({
         yelpID: yelpID,
         description: description,
         latlng: latlng,
-        public: public,
-        // eventID: eventID,
-        permalink: permalink,
+        permalink: evt.permalink,
         number: number,
         yelpObj: result,
+        eventID: eventID,
       }, function (error, template) {
         if (! error) {
           $('body').removeClass('modal-open');
-          Session.set("showCreateSpotDialog", false)
+          Session.set("showCreateSpotDialog", false);
           Modal.hide(Session.get('currentModal'));
-          // Session.set("selectedEvent", this._id);
-
-          var spot = Spots.findOne({permalink: permalink, number:number});
-          if (spot) {
-            Session.set("selectedSpot", spot._id);
-            Session.set('activeSpot', spot.number);
-            Session.set('spotYelpObj', spot.yelpObj);
-          }
-          
+        }else{
+          console.log('error');
         }
-        
+        $('body').removeClass('modal-open');
+        Session.set("showCreateSpotDialog", false);
+        Modal.hide(Session.get('currentModal'));
       });
     } else {
       Session.set("createError",
@@ -50,13 +47,20 @@ Template.createSpotDialog.events({
     }
   },
 
+  'submit form':function(event,template){
+    event.preventDefault();
+    template.find("form").reset();
+  },
+
   'click .cancel': function () {
+    // $(".modalClass").remove();
     $('body').removeClass('modal-open');
     Modal.hide(Session.get('currentModal'));
     Session.set("showCreateSpotDialog", false);
   },
 
   'click .modal-backdrop': function(){
+    // $(".modalClass").remove();
     $('body').removeClass('modal-open');
     Modal.hide(Session.get('currentModal'));
     Session.set("showCreateSpotDialog", false);
@@ -65,7 +69,7 @@ Template.createSpotDialog.events({
   'keypress .searchTerm': function (evt, template) {
     if (evt.which === 13) {
       var term = template.find(".searchTerm").value;
-      
+      console.log(term);
       Meteor.call("searchYelp", term, false, function(error, results) {
         if(results){
           
@@ -74,6 +78,48 @@ Template.createSpotDialog.events({
           // console.log(theResult);
         }
       });      
+    }
+  },
+
+  'click .searchButton': function (evt, template) {
+    function yelpFix( str ){
+      // console.log(str);
+      var ret = str;
+      ret = ret.replace( /ø/g, 'oe' );
+      ret = ret.replace( /Ø/g, 'OE' );
+      ret = ret.replace( /å/g, 'aa' );
+      ret = ret.replace( /Å/g, 'AA' );
+      ret = ret.replace( /æ/g, 'ae' );
+      ret = ret.replace( /Æ/g, 'AE' );
+      ret = ret.replace( /\_/g, '-' );
+
+      ret = ret.replace(/[^a-zA-Z0-9\/-]/ig,'+').replace(/_+/ig,'+').replace(/[-]{2,}/g, '+').toLowerCase();
+
+      return ret;
+    }
+    evt.preventDefault();
+    var term = template.find(".searchTerm").value;
+    var city = template.find(".searchCity").value;
+    if (city){
+      fixedCity = yelpFix(city);
+      Meteor.call("searchYelp", term, false, city=fixedCity, function(error, results) {
+        if(results){
+          // console.log("results");
+          var theResult = JSON.parse(results.content).businesses;
+          Session.set('yelpResult', theResult);
+        }
+      });
+
+    } else{ 
+      console.log(term);
+      Meteor.call("searchYelp", term, false, function(error, results) {
+        if(results){
+          
+          var theResult = JSON.parse(results.content).businesses;
+          Session.set('yelpResult', theResult);
+          console.log(theResult);
+        }
+      });
     }
   },
 
@@ -129,7 +175,7 @@ Template.createSpotDialog.events({
 
 });
 
-Template.createSpotDialog.helpers({
+Template.createNewSpotDialog.helpers({
   createError: function(){
     return Session.get("createError");
   },
@@ -142,7 +188,7 @@ Template.createSpotDialog.helpers({
 
   maybeSelected: function () {
     if (Session.get('restItemClicked')){
-      return 'selected' 
+      return 'selected'; 
     }
   },
 
@@ -155,6 +201,7 @@ Template.createSpotDialog.helpers({
   // }
 
 });
+
 
 
 

@@ -1,15 +1,21 @@
 
-Meteor.subscribe('Spots');
-Meteor.subscribe('igTags');
-Meteor.subscribe('Articles');
-Meteor.subscribe('Events');
+// Meteor.subscribe('Spots');
+// Meteor.subscribe('igTags');
+// Meteor.subscribe('Articles');
+// Meteor.subscribe('Events');
+// Meteor.subscribe('Locations');
 
 Template.navItems.helpers({
   activeIfTemplateIs: function (template) {
     var currentRoute = Router.current();
     return currentRoute &&
       template === currentRoute.lookupTemplate() ? 'active' : '';
-  }
+  },
+  currentUserID: function(){
+    if (Meteor.user){
+      return Meteor.user()._id;
+    }
+  },
 });
 
 Template.navItems.created = function() {

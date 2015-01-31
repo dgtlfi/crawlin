@@ -45,12 +45,13 @@ if (Meteor.isClient) {
     if (map.hasLayer(marker)){
       map.removeLayer(marker);
       markers[spot._id] = null;
-    } else{
-      console.log('removeMarker failed');
-      map.eachLayer(function(layer){
-        console.log(layer);
-      });
-    }
+    } 
+    // else{
+    //   console.log('removeMarker failed');
+    //   map.eachLayer(function(layer){
+    //     console.log(layer);
+    //   });
+    // }
   }
 
   var updateMarker = function (spot){
@@ -70,6 +71,7 @@ if (Meteor.isClient) {
 
   var addSpots = function(spot) {
     // console.log(spot._id);
+    
     var marker = new L.Marker(spot.latlng, {
       _id: spot._id,
       icon: createIcon(spot),
@@ -82,9 +84,10 @@ if (Meteor.isClient) {
     }).on('dblclick', function(e){
       // Session.set('showContent', spot);
       Session.set('selectedSpot', e.target.options._id);
-      Session.set('showEditContentDialog', true);
+      // Session.set('showEditContentDialog', true);
       Session.set('createCoords', e.latlng);
     });
+
     addMarker(marker);
     // var circle = L.circle(spot.latlng, 150, {
     //   color: 'blue',
@@ -109,7 +112,13 @@ if (Meteor.isClient) {
   };
 
   Template.map.created = function(){
-
+    // var evt = Session.get('selectedPerm');
+    // console.log(evt);
+    // z = Meteor.call('lookupZip', evt, function(error, result){
+    //   if (!error){
+    //     Session.set('eLatLng', result[0]);s
+    //   }
+    // });
     markers=[];
     if (! Session.get("selectedSpot")) {
       var spot = Spots.findOne({permalink:Session.get('selectedPerm'), number:'1'});
@@ -117,9 +126,10 @@ if (Meteor.isClient) {
         Session.set("selectedSpot", spot._id);
         Session.set('activeSpot', spot.number);
         Session.set('spotYelpObj', spot.yelpObj);
+        
       }
     }
-
+    
   }
   
 
@@ -129,11 +139,12 @@ if (Meteor.isClient) {
       $('#map_canvas').css('height', (h-offsetTop));
     }).resize();
 
-    initialize($("#map_canvas")[0], [38.900644, -77.036849], 13 );
-    // var selectedPerm = Session.get('selectedPerm');
-    // Events.findOne({permalink: selectedPerm}, {fields: {latlng:1} });
-    // console.log(Events.findOne({permalink: selectedPerm}, {fields: {latlng:1} }));
-    // initialize($("#map_canvas")[0], selectedPerm, 10 );
+    // initialize($("#map_canvas")[0], [Session.get('eLatLng').latitude, Session.get('eLatLng').longitude], 13 );
+    
+    initialize($("#map_canvas")[0], [38.907711,-77.017322], 13 );
+    
+    var spot2 = Spots.findOne({permalink: Session.get('selectedPerm'), number:'1'});
+    map.setView(spot2.latlng);
 
     map.on('dblclick', function(e){
       if (! Meteor.userId()){
@@ -147,8 +158,7 @@ if (Meteor.isClient) {
     // console.log(Session.get('selectedPerm'));
     // var eventID = Events.findOne({permalink: Session.get('selectedPerm')}, {fields: {_id:1}}); 
 
-
-    Spots.find({permalink: Session.get('selectedPerm'), public: true }).observe({
+    Spots.find({permalink: Session.get('selectedPerm')}).observe({
         added: function(spot){
           // console.log('added');
           addSpots(spot);
@@ -164,11 +174,7 @@ if (Meteor.isClient) {
       });
   }
 
-
-//   Template.map.events({
-//     'click .': function(event, template){
-
-  Template.map.helpers({
+  Template.pagination.helpers({    
     spot: function(){
       var spot = Spots.find({permalink: Session.get('selectedPerm')}, {fields: {number:1}}).fetch(); 
       // console.log(spot);
@@ -189,7 +195,8 @@ if (Meteor.isClient) {
 
   });
 
-  Template.map.events({
+  
+  Template.pagination.events({
     'click .pagination li': function(event, template){
       // console.log(event.target.text);
       number = event.target.text;
@@ -205,6 +212,8 @@ if (Meteor.isClient) {
           Session.set('selectedSpot', spot._id);
           Session.set('activeSpot', prevNumber);
           Session.set('spotYelpObj', spot.yelpObj);
+          // var map = Session.get('mapContext');
+          map.setView(spot.latlng);
         }    
       } else if (text === 'Next'){
         active = Session.get('activeSpot');
@@ -215,6 +224,7 @@ if (Meteor.isClient) {
           Session.set('selectedSpot', spot._id);
           Session.set('activeSpot', nextNumber);
           Session.set('spotYelpObj', spot.yelpObj);
+          map.setView(spot.latlng);
         }else {
           nextNumber = Session.get('activeSpot');
         }
@@ -225,11 +235,14 @@ if (Meteor.isClient) {
         Session.set('selectedSpot', spot._id);
         Session.set('activeSpot', number2);
         Session.set('spotYelpObj', spot.yelpObj);
+        map.setView(spot.latlng);
       }
       
     },
 
   });
+
+
 
 }
 

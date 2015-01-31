@@ -1,0 +1,15 @@
+get craigslist list
+create new database document Locations
+
+Locations[longState, stateAbr, [citiesList: [cityName: [zipCode:'', latlng:[,]] ]
+
+
+Locations.find({stateAbr: 'MD'}, {fields: {citiesList:1}});
+
+longState: 'District of Columbia', stateAbr: 'DC', citiesList: [city: Washington, zipCode:'20001', latlng: [lat: 39.0000, lng: -79.000]]
+
+
+obj.citiesList['Washington']
+return => 
+zip: 20001
+latlng: [lat:,lng:]

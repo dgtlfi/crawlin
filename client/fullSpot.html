@@ -1,27 +1,21 @@
 <template name = 'crawls'>
-  {{#if showCreateDialog}}
-    {{> createDialog}}
-  {{/if}}
-  {{#if showEditContentDialog}}
-    {{> editContentDialog}}
-  {{/if}}
   <div class='row'>
     <div class="col-sm-8">
       {{> fullSpot selectedEvent}}
     </div>
     <div class="col-sm-4">
-       <!-- This has to be where we put in Spot Description -->
       {{> spotDetails}}
     </div>
   </div>
   <div class='row'>
-    <div class="col-sm-8">
+    <div class="col-sm-12">
       {{> feed}}
     </div>
   </div>
 </template>
 
 <template name="spotDetails">
+  {{> pagination}}
   {{#if showContent}}
     <h2>{{showContent.name}}</h2>
     <p>{{showContent.description}}</p>
@@ -80,6 +74,9 @@
 
 <template name='map'>
   <div id="map_canvas"></div>
+</template>
+
+<template name='pagination'>
   <nav>
     <ul class="pagination">
       <!-- <h3>test</h3> -->
@@ -113,21 +110,22 @@
 </template>
 
 <template name = 'createNew'>
-  {{#if currentUser}}
+  <!-- {{#if currentUser}}
     <a href='#' class='createNewSpot'>Double click on the map to add a Spot or Click Here to use Yelp Search</a>
     {{#if showSpotDialog}}
       {{> createSpotDialog}}
     {{/if}}
-  {{/if}}
+  {{/if}} -->
 </template>
 
 <template name ='fullSpot'>
   <h2>{{ title }}</h2>
   <h4>Where: {{city}}, {{state}}</h4>
   <h4>When: {{date}}</h4>
-  <h5>Starts at {{startTime}}{{startPM}} </h5>
+  <h5>Starts at {{finalStartTime}}</h5>
   <h5>Event Hashtag: {{tag}}</h5>
-  <h5>RSVP's: <span class="rsvps">{{rsvps}}</span></h5>
+  <h5>RSVP's: <span class="rsvps">{{rsvpCount}}</span></h5>
+  <h5>Created by: {{currentUserID}}</h5>
   <h3>Hello</h3>
   {{ description }}
   <br />

@@ -1,17 +1,63 @@
 <head>
   <title>Crawlin'</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
   <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,700,300' rel='stylesheet' type='text/css'>
 </head>
 
 
 <template name="home">
-  <h2>Home</h2>
-  <p>Welcome to Crawlin'.</p>
-  
-  <div class="social">
-  </div>
+  <div class="container-full">
+    <div class="row">  
+      <div class="col-lg-12 text-center v-center">
+        
+        <!-- <h1>Crawlin'</h1> -->
+        <br/><br/><br/><br/><br/><br/>
+        <h2>A platform for hosts to manage their multi-stage events.</h2>
+        <p class="lead">Pub Crawls | Food Crawls | Scavenger Hunts | City Tours</p>
+        
+        <br/><br/><br/><br/><br/><br/> 
+        <p class="lead">Currently live in BETA!</p>
 
+      </div>
+    </div>
+  </div>
+  <hr>
+  
+  <div class="row">
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading"><h3>Who is Crawlin' for?</h3></div>
+        <div class="panel-body">Have you ever wanted to take a group of friends on a local's tour of your city showing them your favorite bars, restaurants, or landmarks but wanted an interactive site for them to use and RSVP with? Or are you hosting a Pub Crawl and would like to show your guests the map of all the bars you'll be stopping at alongside your Crawls' details and description? Or maybe you're hosting the largest scavenger hunt in your city and would like to have a central site to manage and run your event? Or maybe you are an event organizer and need to keep track of all of your events? Well Crawlin' is here to help you do all of that! 
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading"><h3>What is Crawlin'?</h3></div>
+        <div class="panel-body">Crawlin' is a platform built for event hosts looking for a centralized location to manage all of their events. Crawlin' offers integration to some of the leading services on the Internet to help make your event the best one ever! So create an account and start your first crawl today!
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading"><h3>Features:</h3></div>
+        <!-- <div class="panel-body">Pub crawls are huge in the States and in Europe where a group of friends will visit several bars and restaurants in one night. Some of these have become widely known spawning off hundreds of large scale Pub Crawls all over the country. The point is simple, get a group of friends together, add an activity, and tour the city. That's why we at Crawlin' believe in Food Crawls, Scavenger Hunts, and all multi-stage events to be a crawl.
+        </div> -->
+        <div class="panel-body">
+          <ul>
+            <li>Host Dashboard</li>
+            <li>Event Map</li>
+            <li>Event Details</li>
+            <li>Location Details</li>
+            <li>Yelp Integration</li>
+            <li>Instagram Integration</li>
+            <li>RSVP System</li>
+            <li>More coming soon!</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <template name="layout">
@@ -24,11 +70,12 @@
 </template>
 
 <template name='nav'>
-  <nav class="navbar navbar-default" role="navigation">
+  <nav class="navbar navbar-inverse navbar-static-top" id="top-nav" role="navigation">
     <div class="container-fluid">
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-toggle"></span>
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
@@ -64,14 +111,19 @@
   </li> -->
   <!--  -->
   <li class="{{ activeIfTemplateIs 'schedule' }}">
-    <a href="{{ pathFor 'schedule'}}">Schedule</a>
+    <a href="{{ pathFor 'events'}}">Events</a>
   </li>
-  <li class="{{ activeIfTemplateIs 'articles' }}">
+  <!-- <li class="{{ activeIfTemplateIs 'articles' }}">
     <a href="{{ pathFor 'articles'}}">Articles</a>
-  </li>
+  </li> -->
   <li class="{{ activeIfTemplateIs 'about' }}">
     <a href="{{pathFor 'about'}}">About</a>
   </li>
+  {{#if currentUser}}
+    <li class="{{ activeIfTemplateIs 'dashboard' }}">
+      <a href="/dashboard/{{currentUserID}}/metrics" >Dashboard</a>
+    </li>
+  {{/if}}
   <!-- Login Buttons -->
   <li class="nav navbar-nav navbar-right">
     {{>loginButtons}}

@@ -1,0 +1,41 @@
+<template name="addSpots">
+  <h3>Add a spot for '{{selectedEvent.title}}'</h3>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Location</th><th>Description</th><th>Rating</th><th>Edit?</th><th>Delete?</th>
+      </tr>
+    </thead>
+    <tbody id="items">
+      {{#each selectedSpots}}
+        <tr id="{{_id}}">
+          <td class="spotName"><a href="{{yelpObj.url}}">{{name}}</a></td>
+          <td class="spotDescription">{{description}}</td>
+          <td class="spotRating">
+            <a href="{{yelpObj.url}}" target="_blank">
+              <img src="{{yelpObj.rating_img_url_small}}" alt="{{yelpObj.id}}">
+            </a>
+            ({{yelpObj.review_count}})
+          </td>
+          <td>
+            <a class="btn btn-info editSpot" href="#" role="button"></a>
+          </td>
+          <td>
+            <a class="btn btn-danger deleteSpot" id="{{_id}}" href="#" role="button"></a>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+    <div class="col-sm-2">
+      <a href="#" class="createNewSpotDialog" >
+        <i class="glyphicon glyphicon-plus"></i></a>
+    </div>
+  </table>
+  <br/><br/>
+
+  <div class="col-sm-4">
+    <button type="submit" class="btn btn-primary doneAdding">Done</button>
+  </div>
+
+
+</template>
