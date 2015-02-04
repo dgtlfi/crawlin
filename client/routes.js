@@ -100,9 +100,111 @@ Router.map(function () {
     },
   });
 
+  this.route('adminMetrics', {
+    path: '/dashboard/:userID/admin/allMetrics',
+    template: 'dashboard',
+    waitOn: function(){
+      return [
+        Meteor.subscribe('Spots'),
+        Meteor.subscribe('Events'),
+        Meteor.subscribe('Users'),
+        ]
+    },
+    data: function () {
+      return {
+        allUsers: Meteor.users.find(),
+        allEvents: Events.find(),
+        allSpots: Spots.find(),
+      }
+    },
+    action: function(){
+      this.layout('dash_layout');
+      this.render('allMetrics', {to: 'content'});
+    },
+  });
+
+  this.route('adminUsers', {
+    path: '/dashboard/:userID/admin/allUsers',
+    template: 'dashboard',
+    waitOn: function(){
+      return [
+        Meteor.subscribe('Spots'),
+        Meteor.subscribe('Events'),
+        Meteor.subscribe('Users'),
+        ]
+    },
+    data: function () {
+      return {
+        allUsers: Meteor.users.find(),
+        allEvents: Events.find(),
+        allSpots: Spots.find(),
+      }
+    },
+    action: function(){
+      this.layout('dash_layout');
+      this.render('allUsers', {to: 'content'});
+    },
+  });
+
+  this.route('adminEvents', {
+    path: '/dashboard/:userID/admin/allEvents',
+    template: 'dashboard',
+    waitOn: function(){
+      return [
+        Meteor.subscribe('Spots'),
+        Meteor.subscribe('Events'),
+        Meteor.subscribe('Users'),
+        ]
+    },
+    data: function () {
+      return {
+        allUsers: Meteor.users.find(),
+        allEvents: Events.find(),
+        allSpots: Spots.find(),
+      }
+    },
+    action: function(){
+      this.layout('dash_layout');
+      this.render('allEvents', {to: 'content'});
+    },
+  });
+
+  this.route('adminSpots', {
+    path: '/dashboard/:userID/admin/allSpots',
+    template: 'dashboard',
+    waitOn: function(){
+      return [
+        Meteor.subscribe('Spots'),
+        Meteor.subscribe('Events'),
+        Meteor.subscribe('Users'),
+        ]
+    },
+    data: function () {
+      return {
+        allUsers: Meteor.users.find(),
+        allEvents: Events.find(),
+        allSpots: Spots.find(),
+      }
+    },
+    action: function(){
+      this.layout('dash_layout');
+      this.render('allSpots', {to: 'content'});
+    },
+  });
+
   this.route('profile', {
     path: '/dashboard/:userID/profile',
     template: 'dashboard',
+    // waitOn: function(){
+    //   return [
+    //     Meteor.subscribe('Users'),
+    //     ]
+    // },
+    data: function () {
+      return {
+        userInfo: Meteor.user(),
+      }
+    },
     action: function(){
       this.layout('dash_layout');
       this.render('profile', {to: 'content'});

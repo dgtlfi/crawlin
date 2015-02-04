@@ -6,80 +6,125 @@
           <button type="button" class="close cancel" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
           <h4 class="modal-title" id="createNewSpotModal">Choose a Spot</h4>
         </div>
-        <div class="modal-body">
-          
-          {{#if error}}
-            <div class="alert alert-error">{{error}}</div>
-          {{/if}}
 
-          <form class="form-horizontal" role="form">
-            <div class="form-group">
-              <label for="inputTitle" class="col-sm-2 control-label">Yelp Search</label>
-              <div class="col-sm-8">
-                <input type="text" class="form-control searchTerm" id="inputSearch" placeholder="Search">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="inputTitle" class="col-sm-2 control-label">City Name</label>
-              <div class="col-sm-4">
-                <input type="text" class="form-control searchCity" id="inputCity" placeholder="DC is Default">
-              </div>
-              <button type="search" class="btn btn-info searchButton">Search</button>
-            </div>
-            
-            
-            {{#if yelpResults}}
-              <div class="form-group">
-                <div class="col-sm-4">
-                  <h1>Results</h1>
-                  <ul>
-                    {{#each yelpResults}}
-                      <li class="list"> <!-- Add "selected" class (if selected) -->
-                        <a href="#" id="{{id}}"> {{name}} </a>
-                      </li>
-                   {{/each}}
-                  </ul>
-                </div>
+        <div role="tabpanel">
 
-                {{> selectedYelpResult}}
-
-              </div>  
-
-              <div class="form-group">
-                <label for="inputDescription" class="col-sm-2 control-label">Host's Description</label>
-                <div class="col-sm-10">
-                  <textarea id="descriptionText" class="form-control description" rows="3"></textarea>
-                </div>
-              </div>
-              <!-- <div class="form-group">
-                <label for="inputRestaurant" class="col-sm-2 control-label">What stop is it?</label>
-                <div class="col-sm-2">
-                  <input type="text" class="form-control number" id="inputStop" placeholder="#">
-                </div>
-              </div> -->
-              <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                  <div class="checkbox">
-                    <label>
-                      <input type="checkbox" class="private"> Private?
-                    </label>
-                  </div>
-                </div>
-              </div>
-            {{/if}} 
-          </form>
-
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active" id="yelpSearch"><a href="#" aria-controls="yelpContent" role="tab" data-toggle="tab">Yelp Search</a></li>
+            <li role="presentation" class="inactive" id="addrSearch"><a href="#" aria-controls="searchContent" role="tab" data-toggle="tab">Specify an Address</a></li>
+          </ul>
+          <div class="tab-content">
+            {{#if showSearchContent}}
+              {{> searchContent}}
+            {{else}}
+              {{> yelpContent}}
+            {{/if}}
+          </div>
         </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default cancel" data-dismiss="modal">Close</button>
-          {{#if showSpotSave}}
-            <button type="submit" class="btn btn-primary save">Submit</button>
-          {{/if}}
-        </div>
+        <!-- The rest of the /div's are in the below templates -->
       </div>
     </div>
   </div>
   
+</template>
+
+
+<template name="yelpContent">
+  <div role="tabpanel" class="tab-pane active" id="yelpContent">
+    <div class="modal-body">
+      
+      {{#if error}}
+        <div class="alert alert-error">{{error}}</div>
+      {{/if}}
+
+      <form class="form-horizontal" role="form">
+        <div class="form-group">
+          <label for="inputTitle" class="col-sm-2 control-label">Yelp Search</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control searchTerm" id="inputSearch" placeholder="Search">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputTitle" class="col-sm-2 control-label">City Name</label>
+          <div class="col-sm-4">
+            <input type="text" class="form-control searchCity" id="inputCity" placeholder="DC is Default">
+          </div>
+          <button type="search" class="btn btn-info searchButton">Search</button>
+        </div>
+        
+        
+        {{#if yelpResults}}
+          <div class="form-group">
+            <div class="col-sm-4">
+              <h1>Results</h1>
+              <ul>
+                {{#each yelpResults}}
+                  <li class="list"> <!-- Add "selected" class (if selected) -->
+                    <a href="#" id="{{id}}"> {{name}} </a>
+                  </li>
+               {{/each}}
+              </ul>
+            </div>
+
+            {{> selectedYelpResult}}
+
+          </div>  
+
+          <div class="form-group">
+            <label for="inputDescription" class="col-sm-2 control-label">Host's Description</label>
+            <div class="col-sm-10">
+              <textarea id="descriptionText" class="form-control description" rows="3"></textarea>
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" class="private"> Private?
+                </label>
+              </div>
+            </div>
+          </div>
+        {{/if}} 
+      </form>
+    </div>  <!-- End of Content -->
+  </div>  <!-- End of Tab Content -->
+
+ 
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default cancel" data-dismiss="modal">Close</button>
+      {{#if showSpotSave}}
+        <button type="submit" class="btn btn-primary save">Submit</button>
+      {{/if}}
+    </div>
+</template>
+
+
+<template name="searchContent">
+  <div role="tabpanel" class="tab-pane active" id="searchContent">
+
+    <div class="modal-body">
+      
+      {{#if error}}
+        <div class="alert alert-error">{{error}}</div>
+      {{/if}}
+
+      <form class="form-horizontal" role="form">
+        <div class="form-group">
+          <label for="inputTitle" class="col-sm-2 control-label">Address</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control searchAddress" id="addressSearch" placeholder="Search">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default cancel" data-dismiss="modal">Close</button>
+    <button type="submit" class="btn btn-primary saveAddrSearch">Submit</button>
+  </div>
 </template>
 

@@ -1,0 +1,143 @@
+<template name="allMetrics">
+  <h3>Admin</h3>
+
+  <br/><br/>
+
+  <h4>All Metrics</h4>
+  <div class="col-sm-4">
+    <h4>Users: {{countUsers}}</h4>
+    <h4>Events: {{countEvents}}</h4>
+    <h4>Spots: {{countSpots}}</h4>
+  </div>
+
+</template>
+
+<template name="allUsers">
+  <h3>Admin</h3>
+
+  <br/><br/>
+  <h4>All Users</h4>
+  <table class="table-responsive">
+    <table class="table table-condensed table-hover">
+      <thead>
+        <tr>
+          <th>_id</th><th>Email</th><th>Verified?</th><th>Created</th><th>Online?</th><th>ipAddress</th><th>User Agent</th><th>Last Date</th><th>Edit</th><th>Delete?</th>
+        </tr>
+      </thead>
+      <tbody id="items">
+        {{#each allUsers}}
+          <tr id="{{_id}}" >
+            <td class="userID">{{_id}}</td>
+            {{#each emails}}
+              <td class="userEmail">{{address}}</td>
+              <td class="userEmailVerified">{{verified}}</td>
+            {{/each}}
+            <!-- <td class="userEmailVerified">{{roles}}</td> -->
+            <td class="userEmailVerified">{{createdAt}}</td>
+            <td class="userEmailVerified">{{status.online}}</td>
+            <td class="userEmailVerified">{{status.lastLogin.ipAddr}}</td>
+            <td class="userEmailVerified">{{status.lastLogin.userAgent}}</td>
+            <td class="userEmailVerified">{{status.lastLogin.date}}</td>
+            <td>
+              <a class="btn btn-info editSpot" href="#" role="button"></a>
+            </td>
+            <td>
+              <a class="btn btn-danger deleteSpot" id="{{_id}}" href="#" role="button"></a>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+      <div class="col-sm-2">
+        <a href="#" class="createNewSpotDialog" >
+          <i class="glyphicon glyphicon-plus"></i></a>
+      </div>
+    </table>
+  </table>
+
+</template>
+
+<template name="allEvents">
+  <h3>Admin</h3>
+
+  <br/><br/>
+  <h4>All Events</h4>
+  <table class="table-responsive">
+    <table class="table table-condensed table-hover">
+      <thead>
+        <tr>
+          <th>_id</th><th>Title</th><th>Owner</th><th>City</th><th>Date</th><th>RSVP</th><th>Edit</th><th>Delete?</th>
+        </tr>
+      </thead>
+      <tbody id="items">
+        {{#each allEvents}}
+          <tr id="{{_id}}">
+            <td class="eventID">{{_id}}</td>
+            <td class="eventTitle">{{title}}</td>
+            <td class="eventOwner">{{owner}}</td>
+            <td class="userEmailVerified">{{city}}</td>
+            <td class="userEmailVerified">{{date}}</td>
+            <td class="userEmailVerified">{{rsvpCount}}</td>
+            <td>
+              <a class="btn btn-info editSpot" href="#" role="button"></a>
+            </td>
+            <td>
+              <a class="btn btn-danger deleteSpot" id="{{_id}}" href="#" role="button"></a>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+      <div class="col-sm-2">
+        <a href="#" class="createNewSpotDialog" >
+          <i class="glyphicon glyphicon-plus"></i></a>
+      </div>
+    </table>
+  </table>
+</template>
+
+
+<template name="allSpots">
+  <h3>Admin</h3>
+
+  <br/><br/>
+  <h4>All Spots</h4>
+
+ <!--  <br/>
+  <div class="col-8">
+    <div id="chart1" class="chart">
+      <svg id="barGraph"></svg>
+    </div>
+  </div> -->
+  <div class="row">
+
+    <table class="table-responsive">
+      <table class="table table-condensed table-hover">
+        <thead>
+          <tr>
+            <th>_id</th><th>Name</th><th>Permalink</th><th>Owner</th><th>Edit</th><th>Delete?</th>
+          </tr>
+        </thead>
+        <tbody id="items">
+          {{#each allSpots}}
+            <tr id="{{_id}}">
+              <td class="eventID">{{_id}}</td>
+              <td class="eventTitle">{{name}}</td>
+              <td class="eventOwner">{{permalink}}</td>
+              <td class="userEmailVerified">{{owner}}</td>
+              <td>
+                <a class="btn btn-info editSpot" href="#" role="button"></a>
+              </td>
+              <td>
+                <a class="btn btn-danger deleteSpot" id="{{_id}}" href="#" role="button"></a>
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+        <div class="col-sm-2">
+          <a href="#" class="createNewSpotDialog" >
+            <i class="glyphicon glyphicon-plus"></i></a>
+        </div>
+      </table>
+    </table>
+  </div>
+
+</template>

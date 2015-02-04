@@ -107,6 +107,8 @@ Accounts.onCreateUser(function(options, user) {
 });
 
 
+// dgtlfi = bCYDY4D9333Xdz7yX
+// Roles.addUsersToRoles('kxw34paKGWLfRGsek', 'admin');
 
 
 // var loginAttemptVerifier = function(parameters) {

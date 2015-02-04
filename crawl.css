@@ -151,5 +151,23 @@ hr {
   }
 }
 
+/* indent 2nd level */
+.list-unstyled  {
+   margin-left:20px;
+   padding:8px;
+}
+
+svg {
+    display: block;
+}
+
+#chart1, svg {
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 
   

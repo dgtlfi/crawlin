@@ -13,7 +13,11 @@ rajit:bootstrap3-datepicker
 service-configuration
 oauth1
 mrt:zipcodes
-timbroddin:instagram-node
 mrt:moment
 ian:accounts-ui-bootstrap-3
 rubaxa:sortable
+alanning:roles
+pfafman:nvd3
+d3js:d3
+mizzao:user-status
+aldeed:geocoder

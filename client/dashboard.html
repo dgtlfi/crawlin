@@ -37,6 +37,29 @@
             <a href="/dashboard/{{currentUserID}}/profile" class="createNewEvent">
               <i class="glyphicon glyphicon-user"></i> Profile</a>
           </li>
+          {{#if isInRole 'admin'}}
+            <!-- <ul class="list-unstyled"> -->
+              <li class="nav-header"> <a href="#" data-toggle="collapse" data-target="#userMenu"><i class="glyphicon glyphicon-cog"></i>
+                 Admin <i class="glyphicon glyphicon-chevron-down" id="chevron"></i>
+                </a>
+                <ul class="list-unstyled collapse in" id="userMenu">
+                  <li class="active"> <a href="/dashboard/{{currentUserID}}/admin/allMetrics"> All Metrics</a></li>
+
+                  <li class="active"> <a href="/dashboard/{{currentUserID}}/admin/allUsers"> All Users <span class="badge badge-info">{{countUsers}}</span></a></li>
+                  
+                  <li><a href="/dashboard/{{currentUserID}}/admin/allEvents"> All Events <span class="badge badge-info">{{countEvents}}</span></a></li>
+                  
+                  <li><a href="/dashboard/{{currentUserID}}/admin/allSpots"> All Spots <span class="badge badge-info">{{countSpots}}</span></a></li>
+                  
+                  
+                </ul>
+              </li>
+            <!-- </ul> -->
+            <!-- <li>
+              <a href="/dashboard/{{currentUserID}}/admin" class="adminDash">
+              <i class="glyphicon glyphicon-user"></i> Admin</a>
+            </li> -->
+          {{/if}}
         </ul>
         
         <hr>
@@ -96,14 +119,5 @@
       
 </template>
 
-<template name="profile">
-  <h3>Profile</h3>
-    <div class="col-sm-6">
-      <h3>Coming Soon!</h3>
 
-    </div>
-
-  
-      
-</template>
 

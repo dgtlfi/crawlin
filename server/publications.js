@@ -20,3 +20,21 @@ Meteor.publish('Spots', function () {
   //  }
    return Spots.find({});
 });
+
+Meteor.publish('Users', function () {
+  user = Meteor.users.findOne({_id:this.userId})
+  if(user) {
+      if(Roles.userIsInRole(user, 'admin')) {
+          //You can put some extra logic in here to check which product the user has, if you're selling or something like that
+          return Meteor.users.find({});
+      } else {
+        this.stop();
+        return;
+      }
+   }
+   // return Spots.find({});
+});
+
+process.env.HTTP_FORWARDED_COUNT = 1
+
+

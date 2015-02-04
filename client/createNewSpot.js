@@ -2,6 +2,78 @@
 // Create Party dialog
 
 Template.createNewSpotDialog.events({
+  
+
+  'submit form':function(event,template){
+    event.preventDefault();
+    template.find("form").reset();
+  },
+
+  'click .cancel': function (event, template) {
+    event.preventDefault();
+    // $(".modalClass").remove();
+    $('body').removeClass('modal-open');
+    Modal.hide(Session.get('currentModal'));
+    Session.set("showCreateSpotDialog", false);
+  },
+
+  'click .modal-backdrop': function(event, template){
+    event.preventDefault();
+    // $(".modalClass").remove();
+    $('body').removeClass('modal-open');
+    Modal.hide(Session.get('currentModal'));
+    Session.set("showCreateSpotDialog", false);
+  },
+
+  'click #yelpSearch': function(event, template){
+    event.preventDefault();
+    Session.set("showSearchContent", false);
+  },
+
+  'click #addrSearch': function(event, template){
+    event.preventDefault();
+    Session.set("showSearchContent", true);
+  },
+
+  
+
+  
+
+});
+
+Template.createNewSpotDialog.helpers({
+  createError: function(){
+    return Session.get("createError");
+  },
+  showSearchContent: function(){
+    return Session.get('showSearchContent');
+  },
+
+});
+
+Template.yelpContent.helpers({
+  showSpotSave: function(){
+    return Session.get('showSpotSave');
+  },
+  createError: function(){
+    return Session.get("createError");
+  },
+
+  yelpResults: function () {
+    theResult = Session.get('yelpResult');
+    // console.log(theResult);
+    return theResult;
+  },
+
+  maybeSelected: function () {
+    if (Session.get('restItemClicked')){
+      return 'selected'; 
+    }
+  },
+
+});
+
+Template.yelpContent.events({
   'click .save': function (event, template) {
     result = Session.get('selectedYelpResult');
     eventID = Session.get('selectedEvent');
@@ -47,24 +119,7 @@ Template.createNewSpotDialog.events({
     }
   },
 
-  'submit form':function(event,template){
-    event.preventDefault();
-    template.find("form").reset();
-  },
-
-  'click .cancel': function () {
-    // $(".modalClass").remove();
-    $('body').removeClass('modal-open');
-    Modal.hide(Session.get('currentModal'));
-    Session.set("showCreateSpotDialog", false);
-  },
-
-  'click .modal-backdrop': function(){
-    // $(".modalClass").remove();
-    $('body').removeClass('modal-open');
-    Modal.hide(Session.get('currentModal'));
-    Session.set("showCreateSpotDialog", false);
-  },
+  
 
   'keypress .searchTerm': function (evt, template) {
     if (evt.which === 13) {
@@ -173,33 +228,63 @@ Template.createNewSpotDialog.events({
 
   },
 
+  'submit form':function(event,template){
+    event.preventDefault();
+    template.find("form").reset();
+  },
+
+  'click .cancel': function (event, template) {
+    event.preventDefault();
+    // $(".modalClass").remove();
+    $('body').removeClass('modal-open');
+    Modal.hide(Session.get('currentModal'));
+    Session.set("showCreateSpotDialog", false);
+  },
+
+  'click .modal-backdrop': function(event, template){
+    event.preventDefault();
+    // $(".modalClass").remove();
+    $('body').removeClass('modal-open');
+    Modal.hide(Session.get('currentModal'));
+    Session.set("showCreateSpotDialog", false);
+  },
+
 });
 
-Template.createNewSpotDialog.helpers({
-  createError: function(){
-    return Session.get("createError");
-  },
+Template.searchContent.events({
+  'click .saveAddrSearch': function(event, template){
+      var addr = template.find(".searchAddress").value;
+      console.log(addr);
+    },
 
-  yelpResults: function () {
-    theResult = Session.get('yelpResult');
-    // console.log(theResult);
-    return theResult;
-  },
-
-  maybeSelected: function () {
-    if (Session.get('restItemClicked')){
-      return 'selected'; 
+  'keypress .searchAddress': function (evt, template) {
+    if (evt.which === 13) {
+      var term = template.find(".searchAddress").value;
+      console.log(term);
+      
     }
   },
 
-  showSpotSave: function(){
-    return Session.get('showSpotSave');
+  'submit form':function(event,template){
+    event.preventDefault();
+    template.find("form").reset();
   },
 
-  // selectedYelpResult: function(){
-  //   theResult = Session.get('yelpResult');
-  // }
+  'click .cancel': function (event, template) {
+    event.preventDefault();
+    // $(".modalClass").remove();
+    $('body').removeClass('modal-open');
+    Modal.hide(Session.get('currentModal'));
+    Session.set("showCreateSpotDialog", false);
+  },
 
+  'click .modal-backdrop': function(event, template){
+    event.preventDefault();
+    // $(".modalClass").remove();
+    $('body').removeClass('modal-open');
+    Modal.hide(Session.get('currentModal'));
+    Session.set("showCreateSpotDialog", false);
+  },
 });
 
 

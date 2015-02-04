@@ -1,6 +1,7 @@
 Template.addSpots.events({
   'click a.createNewSpotDialog': function(event, template){
     Session.set('showCreateSpotDialog', true);
+    Session.set("showSearchContent", false);
     Session.set('currentModal', 'createNewSpotDialog');
     Modal.show('createNewSpotDialog');
   },
