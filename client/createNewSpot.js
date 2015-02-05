@@ -73,6 +73,13 @@ Template.yelpContent.helpers({
 
 });
 
+
+
+
+
+////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+
 Template.yelpContent.events({
   'click .save': function (event, template) {
     result = Session.get('selectedYelpResult');
@@ -100,6 +107,7 @@ Template.yelpContent.events({
         permalink: evt.permalink,
         number: number,
         yelpObj: result,
+        searchObj: null,
         eventID: eventID,
       }, function (error, template) {
         if (! error) {
@@ -217,6 +225,7 @@ Template.yelpContent.events({
     Session.set("restItemClicked", true);
     //Yelp Restaurant ID
     var restID = evt.target.id;
+    console.log(restID);
     Session.set('selectedYelpID', restID);
     //This is the Yelp Obj
     theResult = Session.get('yelpResult');
@@ -225,6 +234,7 @@ Template.yelpContent.events({
         Session.set('selectedYelpResult', result);
       }
     });
+
 
   },
 
@@ -251,17 +261,99 @@ Template.yelpContent.events({
 
 });
 
+
+
+
+/////////////////////////////////////////////////////////////////
+
 Template.searchContent.events({
-  'click .saveAddrSearch': function(event, template){
-      var addr = template.find(".searchAddress").value;
-      console.log(addr);
-    },
+  'click a.item': function (evt, template) {
+    Session.set('showSpotSave', true);
+    var addressID = evt.target.id;
+    // console.log(addressID);
+    var lat = addressID.split(',')[0];
+    var lng = addressID.split(',')[1];
+    var results = Session.get('searchResults');
+    if (results){
+      results.forEach(function(result){
+        if (result.latitude == lat && result.longitude == lng){
+          console.log(result);
+          Session.set('selectedSearchResult', result);
+          Session.set('searchResults', null);
+          Session.set('oneResult', result);
+        }
+      });
+    }
+    // template.find("form").reset();
+    // $('body').removeClass('modal-open');
+    // Modal.hide(Session.get('currentModal'));
+    // Session.set("showCreateSpotDialog", false);
+
+    
+    
+  },
+    
 
   'keypress .searchAddress': function (evt, template) {
     if (evt.which === 13) {
-      var term = template.find(".searchAddress").value;
-      console.log(term);
-      
+      var addr = template.find(".searchAddress").value;
+      // console.log(addr);
+      Meteor.call('setAddress', addr, function(error, result){
+        if (!error){  
+          Session.set('searchResults', result);
+        }
+      });
+    }
+  },
+
+  'click .searchButton': function (evt, template) {
+    var addr = template.find(".searchAddress").value;
+    Meteor.call('setAddress', addr, function(error, result){
+      if (!error){  
+          Session.set('searchResults', result);
+        }
+    });
+  },
+
+  'click .saveAddrSearch': function(evt, template){
+    var result = Session.get('oneResult');
+    var eventID = Session.get('selectedEvent');
+    var count = Spots.find({eventID: eventID}, {fields: {id:1}}).count();
+
+    var name = result.streetNumber + " " + result.streetName;
+    var yelpID = result.latitude + "+" + result.longitude;
+    var description = template.find(".description").value;
+    var lat = result.latitude;
+    var lng = result.longitude;
+    var latlng = {lat:lat, lng:lng};
+    var evt = Events.findOne({_id: eventID});
+    Session.set('selectedPerm', evt.permalink);
+    var number = (parseInt(count)+1).toString();
+
+    if (name.length && description.length) {
+      Meteor.call('createSpot', {
+        name: name,
+        yelpID: yelpID,
+        description: description,
+        latlng: latlng,
+        permalink: evt.permalink,
+        number: number,
+        yelpObj: null,
+        searchObj: result,
+        eventID: eventID,
+      }, function (error, template) {
+        if (! error) {
+          $('body').removeClass('modal-open');
+          Session.set("showCreateSpotDialog", false);
+          Modal.hide(Session.get('currentModal'));
+          Session.set('oneResult', null);
+        }else{
+          console.log(error);
+        }
+        $('body').removeClass('modal-open');
+        Session.set("showCreateSpotDialog", false);
+        Modal.hide(Session.get('currentModal'));
+      });
     }
   },
 
@@ -288,5 +380,27 @@ Template.searchContent.events({
 });
 
 
+
+/////////////////////////////////
+Template.searchContent.helpers({
+  showSpotSave: function(){
+    return Session.get('showSpotSave');
+  },
+
+  searchResults: function(){
+    // console.log(Session.get('searchResults'));
+    // var results = Session.get('searchResults');
+
+    return Session.get('searchResults');
+  },
+
+  oneResult: function(){
+    // console.log(Session.get('searchResults'));
+    // var results = Session.get('searchResults');
+
+    return Session.get('oneResult');
+  },
+
+});
 
 

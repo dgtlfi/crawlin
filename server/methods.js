@@ -81,19 +81,14 @@ ServiceConfiguration.configurations.insert({
   accessTokenSecret: "qbAfnxCrFWaJaIl5A1oobG0L9tc"
 });
 
-  // createClient('5d38e4277bc0461f8fa6283e68f85258', '6caefe9e0df64e668de79b9269b87214');
-  /* OPTIONS: { [min_tag_id], [max_tag_id] }; */
+var geoCode = function(addr, callback){
+  var geo = new GeoCoder();
+  var result = geo.geocode(addr, function(error, result){
+    return error, result;
+  });
+  
+}
 
-// ServiceConfiguration.configurations.remove({service: "InstagramAPI"});
-// ServiceConfiguration.configurations.insert({
-//   service: "InstagramAPI",
-//   CLIENT_ID: "5d38e4277bc0461f8fa6283e68f85258",
-//   CLIENT_SECRET: "6caefe9e0df64e668de79b9269b87214",
-// });
-
-// var ig = Meteor.require('instagram-node').instagram();
-
-// var Fiber = Npm.require('fibers');
 
 Accounts.onCreateUser(function(options, user) {
   user.profile = {};
@@ -217,6 +212,7 @@ Meteor.methods({
       // public: !! options.public,
       number: options.number,
       yelpObj: options.yelpObj,
+      searchObj: options.searchObj,
     });
     // var oldCount = Events.findOne({_id:options.eventID}, {fields: {spotCount:1}});
     // var newCount = oldCount.spotCount + 1;
@@ -410,6 +406,22 @@ Meteor.methods({
    getState: function(abr){
       console.log(findStates[abr]);
       return findStates[abr];
+   },
+
+   setAddress: function(addr){
+      check(addr, String);
+      var geo = new GeoCoder();
+      var result = geo.geocode(addr);
+      return result;
+   },
+
+   reverseAddress: function(lat, lng){
+      check(lat, String);
+      check(lat, String);
+      var geo = new GeoCoder();
+      var result = geo.reverse(lat, lng);
+      console.log(result);
+      return result;
    }
 
 });
