@@ -32,6 +32,16 @@ Template.navItems.created = function() {
   }
 };
 
+Template._loginButtonsLoggedInDropdown.events({
+    'click #login-buttons-edit-profile': function(event) {
+        if (Meteor.user()){
+          var userID = Meteor.user()._id;
+          Router.go('/dashboard/'+userID+'/profile');
+        }
+        
+    }
+});
+
 
 
 

@@ -1,9 +1,9 @@
 <template name="editEvent">
   {{#with selectedEvent}}
     <h3>Editing '{{title}}'</h3>
-    {{#if showCreateNewSpot}}
+    <!-- {{#if showCreateNewSpot}}
       {{> createNewSpotDialog}}
-    {{/if}}
+    {{/if}} -->
     <br/>
     <form class="form-horizontal" role="form">
       <div class="form-group">
@@ -71,48 +71,19 @@
   {{/with}}
 
   {{#if createError}}
-    <div class="alert alert-error">{{createError}}</div>
+    <div class="alert alert-warning" role="alert">{{createError}}</div>
   {{/if}}
 
   <br/>
   <h3>Event Spots</h3>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Location</th><th>Description</th><th>Rating</th><th>Edit?</th><th>Delete?</th>
-      </tr>
-    </thead>
-    <tbody id="items">
-      {{#each eventSpots}}
-        <tr id="{{_id}}" >
-          <td class="eventName"><a href="{{yelpObj.url}}">{{name}}</a></td>
-          <td class="spotNumber" id="{{number}}">{{description}}</td>
-          <td class="spotRating">
-            <a href="{{yelpObj.url}}" target="_blank">
-              <img src="{{yelpObj.rating_img_url_small}}" alt="{{yelpObj.id}}">
-            </a>
-            ({{yelpObj.review_count}})
-          </td>
-          <td>
-            <a class="btn btn-info editSpot" id="{{yelpID}}" href="#" role="button"></a>
-          </td>
-          <td>
-            <a class="btn btn-danger deleteSpot" id="{{_id}}" href="#" role="button"></a>
-          </td>
-        </tr>
-      {{/each}}
-    </tbody>
-    <div class="col-sm-2">
-      <a href="#" class="createNewSpotDialog" >
-        <i class="glyphicon glyphicon-plus"></i></a>
-    </div>
-  </table>
 
+  {{> map_edit}}
+
+  {{> addSpots_table}}
 
   <br/>
   <div class="col-sm-4">
-    <button type="submit" class="btn btn-primary save">Submit</button>
+    <button type="submit" class="btn btn-primary save">Update Event</button>
   </div>
-  
   
 </template>

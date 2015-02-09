@@ -3,7 +3,7 @@
     <div class="col-sm-8">
       {{> fullSpot selectedEvent}}
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-4" id="spotDetails">
       {{> spotDetails}}
     </div>
   </div>
@@ -72,10 +72,6 @@
   {{/if}}
 </template>
 
-<template name='map'>
-  <div id="map_canvas"></div>
-</template>
-
 <template name='pagination'>
   <nav>
     <ul class="pagination">
@@ -125,7 +121,7 @@
   <h5>Starts at {{finalStartTime}}</h5>
   <h5>Event Hashtag: {{tag}}</h5>
   <h5>RSVP's: <span class="rsvps">{{rsvpCount}}</span></h5>
-  <h5>Created by: {{currentUserID}}</h5>
+  <h5>Created by: {{userName}}</h5>
   <h3>Hello</h3>
   {{ description }}
   <br />

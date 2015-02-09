@@ -18,17 +18,26 @@ Template.createNewEvent.events({
         return ret;
     }
     function firstUpper( str ){
-      var lowerString = str.trim().toLowerCase();
-      var upperChar = lowerString.charAt(0).toUpperCase();
-      var fixedString = upperChar + lowerString.substr(1);
-      return fixedString;
+      if (typeof str === "string"){
+        var lowerString = str.trim().toLowerCase();
+        var upperChar = lowerString.charAt(0).toUpperCase();
+        var fixedString = upperChar + lowerString.substr(1);
+        return fixedString;
+      } else{
+        return str;
+      }
     }
     var timeRegEx = /^\d{2}:\d{2}$/
     var stateRegEx = /^[A-Za-z]{2}$/
 
 
     /// Start of variables to go to Method Call
-    var title = firstUpper(template.find(".title").value);
+    var titleInput = template.find(".title").value;
+    var titleList = [];
+    titleInput.split(' ').forEach(function(word){
+      titleList.push(firstUpper(word));
+    });
+    var title = titleList.join(" ");
     var description = template.find(".description").value;
     var tag = prototype(template.find(".tag").value, '_');
     // var public = ! template.find(".private").checked;

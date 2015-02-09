@@ -1,9 +1,6 @@
 <template name="createNewEvent">
  
   <h3>New Event</h3>
-  <!-- {{#if showCreateNewSpot}}
-    {{> createNewSpotDialog}}
-  {{/if}} -->
   <br/>
   <form class="form-horizontal" role="form">
     <div class="form-group">
@@ -70,7 +67,7 @@
 
 
   {{#if createError}}
-    <div class="alert alert-error">{{createError}}</div>
+    <div class="alert alert-warning" role="alert">{{createError}}</div>
   {{/if}}
 
   <br/>

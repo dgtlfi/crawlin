@@ -18,10 +18,14 @@ Template.editEvent.events({
         return ret;
     }
     function firstUpper( str ){
-      var lowerString = str.trim().toLowerCase();
-      var upperChar = lowerString.charAt(0).toUpperCase();
-      var fixedString = upperChar + lowerString.substr(1);
-      return fixedString;
+      if (typeof str === "string"){
+        var lowerString = str.trim().toLowerCase();
+        var upperChar = lowerString.charAt(0).toUpperCase();
+        var fixedString = upperChar + lowerString.substr(1);
+        return fixedString;
+      } else{
+        return str;
+      }
     }
     var timeRegEx = /^\d{2}:\d{2}$/
     var stateRegEx = /^[A-Za-z]{2}$/
@@ -34,7 +38,14 @@ Template.editEvent.events({
     });
     console.log(newSpotArray);
     /// Start of variables to go to Method Call
-    var title = firstUpper(template.find(".title").value);
+
+    var titleInput = template.find(".title").value;
+    var titleList = [];
+    titleInput.split(' ').forEach(function(word){
+      titleList.push(firstUpper(word));
+    });
+    var title = titleList.join(" ");
+    
     var description = template.find(".description").value;
     var tag = prototype(template.find(".tag").value, '_');
     // var public = ! template.find(".private").checked;
@@ -92,6 +103,9 @@ Template.editEvent.events({
     var currentPerm = evt.permalink;
     var eventID = Session.get('selectedEvent');
 
+    var selectedColor = Session.get('selectedColor');
+    var selectedProvider = Session.get('selectedProvider');
+
     if (title.length && description.length) {
       Meteor.call('updateEvent', {
         title: title,
@@ -103,6 +117,8 @@ Template.editEvent.events({
         owner: Meteor.user()._id,
         // public: public, 
         city: city,
+        mapProvider: selectedProvider,
+        spotColor: selectedColor,
         state: state,
         startTime: startTime,
         startPM: startPM,
@@ -171,19 +187,6 @@ Template.editEvent.events({
     // var routeURL = Router.current().url;
     // var finalURL = routeURL.split('create');
     // window.location = finalURL[0] + "events";
-  },
-
-  'click a.deleteSpot': function(event, template){
-    var spotID = {spotID: event.currentTarget.id};
-    Meteor.call('deleteSpot', spotID);
-  },
-
-  'click a.editSpot': function(event, template){
-    var yelpID = event.currentTarget.id;
-    Session.set('selectedYelp', yelpID);
-    Session.set('showEditSpotDialog', true);
-    Session.set('currentModal', 'editSpotDialog');
-    Modal.show('editSpotDialog');
   },
 
 });

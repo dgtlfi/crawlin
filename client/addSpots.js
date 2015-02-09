@@ -1,32 +1,53 @@
 Template.addSpots.events({
-  'click a.createNewSpotDialog': function(event, template){
+  'click .doneAdding': function (event, template) {
+    var eventID = Session.get('selectedEvent');
+    var spotColor = Session.get('selectedColor');
+    console.log(spotColor);
+    var mapProvider = Session.get('selectedProvider');
+    console.log(mapProvider);
+    Meteor.call('updateEventMap', {
+      eventID: eventID,
+      spotColor: spotColor,
+      mapProvider: mapProvider, 
+    }, function(error, result){
+      if (!error){
+        Router.go('myEvents', {userID: Meteor.user()._id});
+      }
+      console.log(error);
+      console.log(result);
+    });
+    
+  },
+});
+
+Template.addSpots_table.events({
+  'click a#createNewSpotDialog': function(event, template){
+    event.preventDefault();
     Session.set('showCreateSpotDialog', true);
     Session.set("showSearchContent", false);
     Session.set('currentModal', 'createNewSpotDialog');
     Modal.show('createNewSpotDialog');
   },
 
-  'click .doneAdding': function (event, template) {
-    Router.go('myEvents', {userID: Meteor.user()._id});
-  },
-
   'click a.deleteSpot': function(event, template){
+    event.preventDefault();
     var spotID = event.currentTarget.id;
-    console.log(spotID);
+    // console.log(spotID);
     Meteor.call('deleteSpot', spotID);
   },
 
   'click a.editSpot': function(event, template){
-    console.log('hi');
+    event.preventDefault();
+    // console.log('hi');
     var eventID = event.currentTarget.id;
-    Session.set('selectedEvent', eventID);
+    Session.set('selectedYelp', eventID);
     Session.set('showEditSpotDialog', true);
     Session.set('currentModal', 'editSpotDialog');
     Modal.show('editSpotDialog');
   },
 });
 
-Template.addSpots.rendered = function(){
+Template.addSpots_table.rendered = function(){
   var el = document.getElementById('items');
   var sortable = new Sortable(el, {
     onStart: function (evt) {

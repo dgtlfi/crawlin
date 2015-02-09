@@ -1,26 +1,81 @@
 if (Meteor.isClient) {
-  L.Icon.Default.imagePath = 'packages/leaflet/images'
-  $(window).resize(function(){
-    var h = $(window).height(), offsetTop=90;
-    $mc = $('#map_canvas');
-    $mc.css('height', (h-offsetTop));
-  }).resize();
+  L.Icon.Default.imagePath = 'packages/leaflet/images';
 
   var map, markers = [];
 
-  var initialize = function (element, centroid, zoom, features){
+  var providers = {
+      Stamen_Toner : {
+        url: "http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png",
+        attribution: "Map Tiles by <a href='http://stamen.com'>Stamen Design</a>"
+      },
+      OSM_BlackAndWhite : {
+        url: "http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png",
+        attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"
+      },
+      OSM_Mapnik : {
+        url: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"
+      },
+      OSM_HOT : {
+        url: "http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+        attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"
+      },
+      TF_OpenCycleMap : {
+        url: "http://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png",
+        attribution: "&copy; <a href='http://www.opencyclemap.org'>OpenCycleMap</a>, &copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"
+      },
+      TF_Landscape : {
+        url: "http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png",
+        attribution: "&copy; <a href='http://www.opencyclemap.org'>OpenCycleMap</a>, &copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"
+      },
+      TF_Outdoors : {
+        url: "http://{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png",
+        attribution: "&copy; <a href='http://www.opencyclemap.org'>OpenCycleMap</a>, &copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"
+      },
+      OM_Surfer_Roads : {
+        url: "http://openmapsurfer.uni-hd.de/tiles/roads/x={x}&y={y}&z={z}",
+        attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        minZoom: 0,
+        maxZoom: 20,
+      },
+      Hydda_Full : {
+        url: "http://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png",
+        attribution: 'Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      },
+      Stamen_Terrain : {
+        url: "http://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.png",
+        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      },
+      Esri_WorldStreetMap : {
+        url: "http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+        attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
+      },
+      Esri_WorldTopoMap : {
+        url: "http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+        attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
+      },
+      Esri_NatGeoWorldMap : {
+        url: "http://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}",
+        attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
+      },
+
+    }
+
+  var initialize = function (element, centroid, zoom, provider){
     map = L.map(element, {
       scrollWheelZoom: false,
       doubleClickZoom: false,
       boxZoom: false,
       touchZoom: false,
     }).setView(new L.LatLng(centroid[0], centroid[1]), zoom);
-
-    L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
-      attribution: 'Map Tiles by <a href="http://stamen.com">Stamen Designm</a>'
+    console.log(provider);
+    L.tileLayer(providers[provider].url, {
+      attribution: providers[provider].attribution,
+      unloadInvisibleTiles: 'true',
     }).addTo(map);
-
   }
+
+  
 
   var addMarker = function(marker) {
     // console.log(markers);
@@ -71,7 +126,7 @@ if (Meteor.isClient) {
 
   var addSpots = function(spot) {
     // console.log(spot._id);
-    
+    map.setView(spot.latlng);
     var marker = new L.Marker(spot.latlng, {
       _id: spot._id,
       icon: createIcon(spot),
@@ -102,7 +157,8 @@ if (Meteor.isClient) {
         .setLatLng(e.latlng)
         .setContent("Sorry but you must be logged in to add a location.")
         .openOn(map);
-      }
+  }
+
 
   var openCreateDialog = function(latlng){
     // console.log(latlng);
@@ -112,13 +168,7 @@ if (Meteor.isClient) {
   };
 
   Template.map.created = function(){
-    // var evt = Session.get('selectedPerm');
-    // console.log(evt);
-    // z = Meteor.call('lookupZip', evt, function(error, result){
-    //   if (!error){
-    //     Session.set('eLatLng', result[0]);s
-    //   }
-    // });
+    
     markers=[];
     if (! Session.get("selectedSpot")) {
       var spot = Spots.findOne({permalink:Session.get('selectedPerm'), number:'1'});
@@ -135,36 +185,46 @@ if (Meteor.isClient) {
 
   Template.map.rendered = function(){
     $(window).resize(function(){
-      var h = $(window).height(), offsetTop=90;
+      var h = $(window).height(), offsetTop=360;
       $('#map_canvas').css('height', (h-offsetTop));
     }).resize();
 
     // initialize($("#map_canvas")[0], [Session.get('eLatLng').latitude, Session.get('eLatLng').longitude], 13 );
     
-    initialize($("#map_canvas")[0], [38.907711,-77.017322], 13 );
     
-    var spot2 = Spots.findOne({permalink: Session.get('selectedPerm'), number:'1'});
-    map.setView(spot2.latlng);
-
-    map.on('dblclick', function(e){
-      if (! Meteor.userId()){
-        notLoggedIn(e);
-        console.log("Not logged in.");
-        return;
+    var evt = Events.findOne({permalink: Session.get('selectedPerm')});
+    if (evt) {
+      if (evt.mapProvider){
+        Session.set('selectedProvider', evt.mapProvider);
+        initialize($("#map_canvas")[0], [38.907711,-77.017322], 13, Session.get('selectedProvider') );
+      } else {
+        initialize($("#map_canvas")[0], [38.907711,-77.017322], 13, 'Stamen_Toner' );
       }
-      openCreateDialog(e.latlng);
-    });
+      if (evt.spotColor){
+        Session.set('selectedColor', evt.spotColor);
+        
+      }
+    } else{
+      initialize($("#map_canvas")[0], [38.907711,-77.017322], 13, 'Stamen_Toner' );
+    }
+
+    // map.on('dblclick', function(e){
+    //   if (! Meteor.userId()){
+    //     notLoggedIn(e);
+    //     console.log("Not logged in.");
+    //     return;
+    //   }
+    //   openCreateDialog(e.latlng);
+    // });
 
     // console.log(Session.get('selectedPerm'));
     // var eventID = Events.findOne({permalink: Session.get('selectedPerm')}, {fields: {_id:1}}); 
 
     Spots.find({permalink: Session.get('selectedPerm')}).observe({
         added: function(spot){
-          // console.log('added');
           addSpots(spot);
         },
         changed: function(spot){
-          // var marker = markers[spot._id];
           updateMarker(spot);
         },
         removed: function(spot){
@@ -172,7 +232,24 @@ if (Meteor.isClient) {
           removeMarker(spot);
         }
       });
+
+    var spot2 = Spots.findOne({permalink: Session.get('selectedPerm'), number:'1'});
+    try{
+      map.setView(spot2.latlng);
+    } catch (e){
+      console.log(e);
+    } 
   }
+
+  Template.map.helpers({ 
+    selectedColor: function(){
+      var color = Session.get('selectedColor');
+      if (color){
+        return color;
+      }
+    }
+  });
+
 
   Template.pagination.helpers({    
     spot: function(){
@@ -242,7 +319,42 @@ if (Meteor.isClient) {
 
   });
 
+  Template.map_edit.created = function(){
+    Session.set('selectedProvider', 'Stamen_Toner');
+  }
 
+  Template.map_edit.rendered = function(){
+    var evt = Events.findOne({_id: Session.get('selectedEvent')});
+    if (evt.mapProvider){
+      Session.set('selectedProvider', evt.mapProvider);
+    }
+    if (evt.spotColor){
+      Session.set('selectedColor', evt.spotColor);
+    }
+  }
+  
+
+  Template.map_edit.events({
+    'click input.provider': function(event, template){
+      providerID = event.currentTarget.id;
+      Session.set('selectedProvider', providerID);
+      L.tileLayer(providers[providerID].url, {
+        attribution: providers[providerID].attribution,
+        unloadInvisibleTiles: 'true',
+      }).addTo(map);
+    },
+
+    'click input.color': function(event, template){
+      color = event.currentTarget.id;
+      $('.leaflet-div-icon').css({"background":color});
+      Session.set('selectedColor', color);
+    },
+
+  });
+
+  Template.map_edit.helpers({
+
+  });
 
 }
 

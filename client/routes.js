@@ -57,6 +57,7 @@ Router.map(function () {
       this.render('crawls');
     },
     onAfterAction: function(){
+      Session.set('selectedProvider', null);
       Session.set('selectedPerm', this.params.permalink);
       Session.set('selectedState', this.params.state);
     }
@@ -77,6 +78,17 @@ Router.map(function () {
         selectedEvents: Events.find({owner: this.params.userID}),
       }
     },
+    onBeforeAction: function () {
+      if(!Meteor.user() && !Meteor.loggingIn()){
+        this.render('home');
+      } else if (Roles.userIsInRole(Meteor.user()._id, 'admin')){
+        this.next();
+      } else if (Meteor.user()._id != this.params.userID){
+        this.render('home');
+      } else {
+       this.next();
+      }
+    },
   });
 
   this.route('metrics', {
@@ -92,6 +104,17 @@ Router.map(function () {
       return {
         // userInfo: Users.find(),
         selectedEvents: Events.find({owner: this.params.userID}),
+      }
+    },
+    onBeforeAction: function () {
+      if(!Meteor.user() && !Meteor.loggingIn()){
+        this.render('home');
+      } else if (Roles.userIsInRole(Meteor.user()._id, 'admin')){
+        this.next();
+      } else if (Meteor.user()._id != this.params.userID){
+        this.render('home');
+      } else {
+       this.next();
       }
     },
     action: function(){
@@ -117,6 +140,17 @@ Router.map(function () {
         allSpots: Spots.find(),
       }
     },
+    onBeforeAction: function () {
+      if(!Meteor.user() && !Meteor.loggingIn()){
+        this.render('home');
+      } else if (Roles.userIsInRole(Meteor.user()._id, 'admin')){
+        this.next();
+      } else if (Meteor.user()._id != this.params.userID){
+        this.render('home');
+      } else {
+       this.next();
+      }
+    },
     action: function(){
       this.layout('dash_layout');
       this.render('allMetrics', {to: 'content'});
@@ -138,6 +172,17 @@ Router.map(function () {
         allUsers: Meteor.users.find(),
         allEvents: Events.find(),
         allSpots: Spots.find(),
+      }
+    },
+    onBeforeAction: function () {
+      if(!Meteor.user() && !Meteor.loggingIn()){
+        this.render('home');
+      } else if (Roles.userIsInRole(Meteor.user()._id, 'admin')){
+        this.next();
+      } else if (Meteor.user()._id != this.params.userID){
+        this.render('home');
+      } else {
+       this.next();
       }
     },
     action: function(){
@@ -163,6 +208,17 @@ Router.map(function () {
         allSpots: Spots.find(),
       }
     },
+    onBeforeAction: function () {
+      if(!Meteor.user() && !Meteor.loggingIn()){
+        this.render('home');
+      } else if (Roles.userIsInRole(Meteor.user()._id, 'admin')){
+        this.next();
+      } else if (Meteor.user()._id != this.params.userID){
+        this.render('home');
+      } else {
+       this.next();
+      }
+    },
     action: function(){
       this.layout('dash_layout');
       this.render('allEvents', {to: 'content'});
@@ -186,6 +242,17 @@ Router.map(function () {
         allSpots: Spots.find(),
       }
     },
+    onBeforeAction: function () {
+      if(!Meteor.user() && !Meteor.loggingIn()){
+        this.render('home');
+      } else if (Roles.userIsInRole(Meteor.user()._id, 'admin')){
+        this.next();
+      } else if (Meteor.user()._id != this.params.userID){
+        this.render('home');
+      } else {
+       this.next();
+      }
+    },
     action: function(){
       this.layout('dash_layout');
       this.render('allSpots', {to: 'content'});
@@ -203,6 +270,17 @@ Router.map(function () {
     data: function () {
       return {
         userInfo: Meteor.user(),
+      }
+    },
+    onBeforeAction: function () {
+      if(!Meteor.user() && !Meteor.loggingIn()){
+        this.render('home');
+      } else if (Roles.userIsInRole(Meteor.user()._id, 'admin')){
+        this.next();
+      } else if (Meteor.user()._id != this.params.userID){
+        this.render('home');
+      } else {
+       this.next();
       }
     },
     action: function(){
@@ -227,6 +305,17 @@ Router.map(function () {
         selectedEvents: Events.find({owner: this.params.userID}),
       }
     },
+    onBeforeAction: function () {
+      if(!Meteor.user() && !Meteor.loggingIn()){
+        this.render('home');
+      } else if (Roles.userIsInRole(Meteor.user()._id, 'admin')){
+        this.next();
+      } else if (Meteor.user()._id != this.params.userID){
+        this.render('home');
+      } else {
+       this.next();
+      }
+    },
     action: function(){
       this.layout('dash_layout');
       this.render('myEvents', {to: 'content'});
@@ -247,12 +336,25 @@ Router.map(function () {
       return {
         // userInfo: Users.find(),
         selectedEvent: Events.findOne({_id: this.params.eventID}),
-        selectedSpots: Spots.find({owner: this.params.userID, eventID: Session.get('selectedEvent')}),
+        selectedSpots: Spots.find({owner: this.params.userID, eventID: this.params.eventID}),
       }
     },
     action: function(){
       this.layout('dash_layout');
       this.render('addSpots', {to: 'content'});
+    },
+    onBeforeAction: function () {
+      var evt = Events.findOne({_id: this.params.eventID});
+      Session.set('selectedPerm', evt.permalink);
+      if(!Meteor.user() && !Meteor.loggingIn()){
+        this.render('home');
+      } else if (Roles.userIsInRole(Meteor.user()._id, 'admin')){
+        this.next();
+      } else if (Meteor.user()._id != evt.owner){
+        this.render('home');
+      } else {
+       this.next();
+      }
     },
     onAfterAction: function(){
       Session.set('selectedEvent', this.params.eventID);
@@ -274,12 +376,26 @@ Router.map(function () {
       return {
         // userInfo: Users.find(),
         selectedEvent: Events.findOne({_id: this.params.eventID}),
-        eventSpots: Spots.find({eventID: this.params.eventID})
+        // eventSpots: Spots.find({eventID: this.params.eventID})
+        selectedSpots: Spots.find({owner: this.params.userID, eventID: this.params.eventID}),
       }
     },
     action: function(){
       this.layout('dash_layout');
       this.render('editEvent', {to: 'content'});
+    },
+    onBeforeAction: function () {
+      var evt = Events.findOne({_id: this.params.eventID});
+      Session.set('selectedPerm', evt.permalink);
+      if(!Meteor.user() && !Meteor.loggingIn()){
+        this.render('home');
+      } else if (Roles.userIsInRole(Meteor.user()._id, 'admin')){
+        this.next();
+      } else if (Meteor.user()._id != evt.owner){
+        this.render('home');
+      } else {
+       this.next();
+      }
     },
     onAfterAction: function(){
       Session.set('selectedEvent', this.params.eventID);
@@ -296,6 +412,17 @@ Router.map(function () {
         Meteor.subscribe('Events'),
         ]
     },
+    onBeforeAction: function () {
+      if(!Meteor.user() && !Meteor.loggingIn()){
+        this.render('home');
+      } else if (Roles.userIsInRole(Meteor.user()._id, 'admin')){
+        this.next();
+      } else if (Meteor.user()._id != this.params.userID){
+        this.render('home');
+      } else {
+       this.next();
+      }
+    },
     action: function(){
       this.layout('dash_layout');
       this.render('createNewEvent', {to: 'content'});
@@ -311,7 +438,7 @@ Router.map(function () {
       //TODO: make crawlList filter only by public events
       crawlList: function () {
         // will return only the upcoming events
-        return Events.find({ dbDate : { "$gte" : moment().format() } }, {sort: {dbDate:-1, title:1}});
+        return Events.find({ dbDate : { "$gte" : moment().format() } }, {sort: {dbDate:1, title:1}});
       },
       fullList: function(){
         // all events 

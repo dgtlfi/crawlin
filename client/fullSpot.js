@@ -159,6 +159,7 @@ Template.spotDetails.helpers({
 
 });
 
+
 Template.spotYelpInfo.helpers({
 
   yes: function(){

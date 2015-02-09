@@ -1,0 +1,74 @@
+<template name='map'>
+    <style>
+      .leaflet-div-icon {
+      background:{{selectedColor}};
+      }
+    </style>
+  <div id="map_canvas"></div>
+</template>
+
+<template name="map_edit">
+  <div class="row">
+    <div class="col-sm-8">
+      {{> map}}
+    </div>
+    <div class="col-sm-4">
+        <!-- <div class="col-sm-2"> -->
+            <div class="btn-group" data-toggle="radio">
+                <h4>Choose Map Style</h4>
+                <input type="radio" name="options" class="provider" id="Stamen_Toner" autocomplete="off" checked="{{checkedIf 'Stamen_Toner'}}"> Stamen_Toner
+                <br/>
+                <input type="radio" name="options" class="provider" id="OM_Surfer_Roads" autocomplete="off" checked="{{checkedIf 'OM_Surfer_Roads'}}"> OM_Surfer_Roads
+                <br/>
+                <!-- <input type="radio" name="options" id="OSM_BlackAndWhite" autocomplete="off"> OSM_BlackAndWhite
+                <br/> -->
+                <input type="radio" name="options" class="provider" id="OSM_Mapnik" autocomplete="off" checked="{{checkedIf 'OSM_Mapnik'}}"> OSM_Mapnik
+                <br/>
+                <input type="radio" name="options" class="provider" id="OSM_HOT" autocomplete="off" checked="{{checkedIf 'OSM_HOT'}}"> OSM_HOT
+                <br/>
+                <!-- <input type="radio" name="options" id="TF_OpenCycleMap" autocomplete="off"> TF_OpenCycleMap
+                <br/> -->
+                <!-- <input type="radio" name="options" id="TF_Landscape" autocomplete="off"> TF_Landscape
+                <br/> -->
+                <input type="radio" name="options" class="provider" id="TF_Outdoors" autocomplete="off" checked="{{checkedIf 'TF_Outdoors'}}"> TF_Outdoors
+                <br/>
+                
+                <input type="radio" name="options" class="provider" id="Stamen_Terrain" autocomplete="off" checked="{{checkedIf 'Stamen_Terrain'}}"> Stamen_Terrain
+                <br/>
+                <input type="radio" name="options" class="provider" id="Esri_WorldStreetMap" autocomplete="off" checked="{{checkedIf 'Esri_WorldStreetMap'}}"> Esri_WorldStreetMap
+                <br/>
+                <input type="radio" name="options" class="provider" id="Esri_WorldTopoMap" autocomplete="off" checked="{{checkedIf 'Esri_WorldTopoMap'}}"> Esri_WorldTopoMap
+                <br/>
+                <input type="radio" name="options" class="provider" id="Esri_NatGeoWorldMap" autocomplete="off" checked="{{checkedIf 'Esri_NatGeoWorldMap'}}"> Esri_NatGeoWorld
+                <br/>
+            </div>
+        <!-- </div> -->
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="btn-group" data-toggle="radio">
+                    <h4>Choose Spot Color</h4>
+                    <input type="radio" name="options2" class="color" id="#ddbb00" autocomplete="off" checked="{{checkedIf '#ddbb00'}}"> Gold
+                    <br/>
+                    <input type="radio" name="options2" class="color" id="Black" autocomplete="off" checked="{{checkedIf 'Black'}}"> Black
+                    <br/>
+                    <input type="radio" name="options2" class="color" id="#49AFCD" autocomplete="off" checked="{{checkedIf '#49AFCD'}}"> Blue
+                    <br/>
+                    <input type="radio" name="options2" class="color" id="#32CD32" autocomplete="off" checked="{{checkedIf '#32CD32'}}"> Lime Green
+                    <br/>
+                    <input type="radio" name="options2" class="color" id="#CD2626" autocomplete="off" checked="{{checkedIf '#CD2626'}}"> Red
+                    <br/>
+                    <input type="radio" name="options2" class="color" id="#848484" autocomplete="off" checked="{{checkedIf '#848484'}}"> Grey
+                    <br/>
+                    <input type="radio" name="options2" class="color" id="#FF8C00" autocomplete="off" checked="{{checkedIf '#FF8C00'}}"> Orange
+                    <br/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+  <div class="row">
+    <div class="col-sm-4">
+        {{> pagination}}
+    </div>
+  </div>
+</template>

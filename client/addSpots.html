@@ -1,5 +1,14 @@
 <template name="addSpots">
+  <h3>'{{selectedEvent.title}}'</h3>
+  {{> map_edit}}
   <h3>Add a spot for '{{selectedEvent.title}}'</h3>
+  {{> addSpots_table}}
+  <div class="col-sm-4">
+    <button type="submit" class="btn btn-primary doneAdding">Done</button>
+  </div>
+</template>
+
+<template name="addSpots_table">
   <table class="table table-striped">
     <thead>
       <tr>
@@ -18,7 +27,7 @@
             ({{yelpObj.review_count}})
           </td>
           <td>
-            <a class="btn btn-info editSpot" href="#" role="button"></a>
+            <a class="btn btn-info editSpot" href="#" id='{{yelpObj.id}}' role="button"></a>
           </td>
           <td>
             <a class="btn btn-danger deleteSpot" id="{{_id}}" href="#" role="button"></a>
@@ -27,15 +36,10 @@
       {{/each}}
     </tbody>
     <div class="col-sm-2">
-      <a href="#" class="createNewSpotDialog" >
+      <a href="#" id="createNewSpotDialog" >
         <i class="glyphicon glyphicon-plus"></i></a>
     </div>
   </table>
   <br/><br/>
-
-  <div class="col-sm-4">
-    <button type="submit" class="btn btn-primary doneAdding">Done</button>
-  </div>
-
 
 </template>

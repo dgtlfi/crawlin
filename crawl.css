@@ -1,7 +1,7 @@
 /* CSS declarations go here */
-/*body {
+body {
     font-family: 'Titillium Web', sans-serif;
-}*/
+}
 
 div.photo {
     width: 270px;
@@ -58,21 +58,22 @@ div.photo {
     color: white;
     opacity: .9;
     vertical-align:middle;
+    background: #ddbb00;
 }
 
 /*add.public when we add public/private again*/
 
-.leaflet-div-icon {
+/*.leaflet-div-icon {*/
 	/*Original Blue*/
     /*background: #49AFCD;*/
     /*Conflower Blue*/
     /*background: #6495ED;*/
-    background: #ddbb00;
+    
     /*Lime Green*//*
     background: #32CD32;
     /*Black*/
     /*background: #000;*/
-}
+/*}*/
 
 /*.leaflet-div-icon.private {
     background: #DA4F49;
@@ -169,5 +170,16 @@ svg {
     box-sizing: border-box;
 }
 
+.box{
+    width: 300px;
+    height: 100px;
+    background-color: yellow;
+    display:block;
+    box-shadow:10px 10px 50px 20px pink inset;
+}
 
+.container-full{
+    background: url("http://41.media.tumblr.com/tumblr_l7f13tQRHQ1qdq889o1_1280.jpg") no-repeat center center fixed;
+    color: white;
+}
   

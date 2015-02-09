@@ -112,12 +112,14 @@ Template.yelpContent.events({
       }, function (error, template) {
         if (! error) {
           $('body').removeClass('modal-open');
+          Session.set("showSearchContent", false);
           Session.set("showCreateSpotDialog", false);
           Modal.hide(Session.get('currentModal'));
         }else{
           console.log('error');
         }
         $('body').removeClass('modal-open');
+        Session.set("showSearchContent", false);
         Session.set("showCreateSpotDialog", false);
         Modal.hide(Session.get('currentModal'));
       });
@@ -132,7 +134,7 @@ Template.yelpContent.events({
   'keypress .searchTerm': function (evt, template) {
     if (evt.which === 13) {
       var term = template.find(".searchTerm").value;
-      console.log(term);
+      // console.log(term);
       Meteor.call("searchYelp", term, false, function(error, results) {
         if(results){
           
@@ -174,13 +176,13 @@ Template.yelpContent.events({
       });
 
     } else{ 
-      console.log(term);
+      // console.log(term);
       Meteor.call("searchYelp", term, false, function(error, results) {
         if(results){
           
           var theResult = JSON.parse(results.content).businesses;
           Session.set('yelpResult', theResult);
-          console.log(theResult);
+          // console.log(theResult);
         }
       });
     }
@@ -345,6 +347,7 @@ Template.searchContent.events({
         if (! error) {
           $('body').removeClass('modal-open');
           Session.set("showCreateSpotDialog", false);
+          Session.set("showSearchContent", false);
           Modal.hide(Session.get('currentModal'));
           Session.set('oneResult', null);
         }else{
@@ -352,6 +355,7 @@ Template.searchContent.events({
         }
         $('body').removeClass('modal-open');
         Session.set("showCreateSpotDialog", false);
+        Session.set("showSearchContent", false);
         Modal.hide(Session.get('currentModal'));
       });
     }

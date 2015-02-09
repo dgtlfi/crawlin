@@ -69,7 +69,7 @@ Template.editSpotDialog.helpers({
   selectedSpot: function(){
     // console.log(Session.get('selectedSpot'));
     // console.log(Session.get('selectedPerm'));
-    return Spots.findOne({_id: Session.get('selectedSpot')});
+    return Spots.findOne({yelpID: Session.get('selectedYelp')});
   }, 
 });
 

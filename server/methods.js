@@ -144,6 +144,9 @@ Meteor.methods({
     console.log(options.city);
     console.log(options.state);
     var cityLatLng = Zipcodes.lookupByName(options.city, options.state);
+    var user = Meteor.users.findOne({_id: this.userId});
+    var userName = user.profile.userName;
+    if (!userName) { var userName = user.profile.emails[0].address }
     // var longState = findStates(options.state);
 
     return Events.insert({
@@ -153,13 +156,12 @@ Meteor.methods({
       dbDate: options.dbDate,
       permalink: options.permalink,
       description: options.description,
-      publicEvt: !! options.public,
+      // publicEvt: !! options.public,
+      userName: userName,
       city: options.city,
       state: options.state,
       // longState: longState,
       latlng: [cityLatLng[0].latitude, cityLatLng[0].longitude],
-      spotCount: 0,
-      spots: [],
       rsvpCount: 0,
       rsvpd: [],
       tag: options.tag,
@@ -214,25 +216,6 @@ Meteor.methods({
       yelpObj: options.yelpObj,
       searchObj: options.searchObj,
     });
-    // var oldCount = Events.findOne({_id:options.eventID}, {fields: {spotCount:1}});
-    // var newCount = oldCount.spotCount + 1;
-
-    // return Events.update({_id:options.eventID},{
-    //   $inc:{
-    //     spotCount: 1,
-    //   },
-    //   $push:{
-    //     spots: {
-    //       owner: this.userId,
-    //       name: options.name,
-    //       description: options.description,
-    //       latlng: options.latlng,
-    //       number: newCount,
-    //       yelpID: options.yelpID,
-    //       yelpObj: options.yelpObj,
-    //     }
-    //   }
-    // })
   },
 
   updateEvent: function (options) {
@@ -266,6 +249,20 @@ Meteor.methods({
         endPM: options.endPM,
         finalEndTime: options.finalEndTime,
         tag: options.tag,
+        spotColor: options.spotColor,
+        mapProvider: options.mapProvider,
+      }
+    });
+  },
+
+  updateEventMap: function (options) {
+    options = options || {};
+    if (! ( options.spotColor.length && typeof options.mapProvider === "string"))
+      throw new Meteor.Error(400, "Required parameter missing");
+    return Events.update(options.eventID, { 
+      $set: {
+        spotColor: options.spotColor,
+        mapProvider: options.mapProvider,
       }
     });
   },
@@ -395,13 +392,53 @@ Meteor.methods({
       return Meteor.user({_id:Meteor.userId()});
    },
 
-   // updateInsta: function(eventID, instaObj){
-   //    return Events.update(eventID._id,{
-   //          $push:{
-   //            instaObj: instaObj,
-   //          }
-   //    });
-   // },
+   updateProfile: function(options){
+      check(options.firstName, String)
+      check(options.lastName, String)
+      check(options.userName, String)
+      var first = options.firstName;
+      var last = options.lastName;
+      var user = options.userName;
+      var lowerUser = user.trim().toLowerCase();
+      // console.log(user);
+      var newProfile = {
+        firstName: first,
+        lastName: last,
+        userName: lowerUser,
+      }
+
+
+      var current = Meteor.users.findOne({_id:this.userId});
+      // Checking to see if it's new user without a user name before
+      if (! current.profile.userName){
+        // console.log(lowerUser);
+        if (! lowerUser.length > 3){
+          throw new Meteor.Error(407, "Username is too short, must be greater than 3 characters");
+        }
+        if (! Meteor.users.findOne({'profile.userName': lowerUser})){
+          if (this.userId){
+            return Meteor.users.update({_id: this.userId},{
+              $set:{
+                profile: newProfile,
+              }
+              
+            });
+          }
+        } else{
+          throw new Meteor.Error(410, "Username already exists. Please choose a new one.");
+        }
+         
+      } else {
+        if (this.userId){
+          return Meteor.users.update({_id: this.userId},{
+            $set:{
+              profile: newProfile,
+            }
+          });
+        }
+      }
+   },
+
 
    getState: function(abr){
       console.log(findStates[abr]);
