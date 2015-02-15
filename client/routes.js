@@ -1,5 +1,6 @@
 Router.configure({
-   layoutTemplate: 'layout'  //can be any template name
+   layoutTemplate: 'layout',  //can be any template name
+   // trackPageView: true,
  });
 
 

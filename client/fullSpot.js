@@ -25,7 +25,9 @@ Template.rsvp.helpers({
     if (Session.get('disableRsvp')){
       return 'disabled';
     }
-  }
+  },
+
+  
 
 
 });
@@ -96,7 +98,7 @@ Template.feed.rendered = function () {
 
 
 Template.rsvp.rendered = function(){
-  var currentUser = Meteor.user();
+  var currentUser = Meteor.user()._id;
   var permalink = Session.get('selectedPerm');
   var alreadyRsvpd = Events.findOne({permalink:permalink, rsvpd: currentUser})
   if (alreadyRsvpd){
@@ -105,7 +107,7 @@ Template.rsvp.rendered = function(){
 }
 
 Template.rsvp.events({
-  'click .RSVP': function(event, template){
+  'click .rsvp': function(event, template){
     var currentUser = Meteor.user();
     var permalink = Session.get('selectedPerm');
     
@@ -119,24 +121,37 @@ Template.rsvp.events({
     }else{
       var alreadyRsvpd = Events.findOne({permalink:permalink, rsvpd: currentUser})
       if (alreadyRsvpd){
+        // place a You've already RSVP'd Yes button greyed out
         Session.set('disableRsvp', true);
         Session.set('showRsvpError', true);
         Session.set('currentModal', 'createRsvpError');
         Modal.show('createRsvpError');
       } else{ 
-        Meteor.call('updateRsvp', {
-          currentUser: currentUser,
-          permalink: permalink,
-          }, function(error, result){
-            if(!error){
-              Session.set('showRsvpDialog', true);
-              Session.set('disableRsvp', true);
-              Session.set('currentModal', 'createRsvpDialog');
-              Modal.show('createRsvpDialog');
-            }
-          }
-          
-        );
+        var id = event.currentTarget.id;
+        console.log(id);
+        if (id === 'yes'){
+          Session.set('rsvpID', id);
+          Session.set('rsvpTitle', "Yes! We'll see you soon!");
+          Session.set('rsvpComment', "Let us know if you");
+          Session.set('rsvpPositive', true);
+          Session.set('currentModal', 'newRsvpDialog');
+          Modal.show('newRsvpDialog');
+        } else if (id === 'maybe'){
+          Session.set('rsvpID', id);
+          Session.set('rsvpTitle', "Ok, what'll it take?");
+          Session.set('rsvpComment', "Let us know if you");
+          Session.set('rsvpPositive', false);
+          Session.set('currentModal', 'newRsvpDialog');
+          Modal.show('newRsvpDialog');
+        } else if (id === 'no'){
+          Session.set('rsvpID', id);
+          Session.set('rsvpTitle', "Awe... Well, hope to see you soon.");
+          Session.set('rsvpComment', "Let us know if you");
+          Session.set('rsvpPositive', false);
+          Session.set('currentModal', 'newRsvpDialog');
+          Modal.show('newRsvpDialog');
+        } 
+        
       }
       
     }
@@ -159,6 +174,29 @@ Template.spotDetails.helpers({
 
 });
 
+Template.spotDetails.rendered = function(){
+  $(window).resize(function() {
+    var height = $(window).height();
+    var width = $(window).width();
+    if (width >= 768 ){
+      window.onscroll = function (e) {
+        var vertical_position = 0;
+        if (pageYOffset){
+          vertical_position = pageYOffset;
+        }
+          
+        else if (document.documentElement.clientHeight)//ie
+          vertical_position = document.documentElement.scrollTop;
+        else if (document.body)//ie quirks
+          vertical_position = document.body.scrollTop;
+
+        $("#spotDetails").css('top', (vertical_position + 10)+'px');
+      }
+    }
+  });
+
+  
+}
 
 Template.spotYelpInfo.helpers({
 
@@ -168,5 +206,35 @@ Template.spotYelpInfo.helpers({
       return spotYelpObj;
     
     },
+});
+
+Template.fullSpot.events({
+  'click a#yes': function(event, template){
+    console.log('yes');
+    Session.set('guestID', 'yes');
+    Session.set('Yes', 'active');
+    Session.set('Maybe', 'inactive');
+    Session.set('No', 'inactive');
+    Session.set('currentModal', 'showRsvpGuests');
+    Modal.show('showRsvpGuests');
+  },
+  'click a#maybe': function(event, template){
+    console.log('maybe');
+    Session.set('guestID', 'maybe');
+    Session.set('Yes', 'inactive');
+    Session.set('Maybe', 'active');
+    Session.set('No', 'inactive');
+    Session.set('currentModal', 'showRsvpGuests');
+    Modal.show('showRsvpGuests');
+  },
+  'click a#no': function(event, template){
+    console.log('no');
+    Session.set('guestID', 'no');
+    Session.set('Yes', 'inactive');
+    Session.set('Maybe', 'inactive');
+    Session.set('No', 'active');
+    Session.set('currentModal', 'showRsvpGuests');
+    Modal.show('showRsvpGuests');
+  },
 });
 

@@ -27,6 +27,8 @@ Template.navItems.created = function() {
         }
       } else {
         console.log('Thank you! Your email address has been confirmed.')
+        var userID = Meteor.user()._id;
+        Router.go('/dashboard/'+userID+'/profile');
       }
     });
   }

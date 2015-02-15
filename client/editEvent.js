@@ -33,10 +33,10 @@ Template.editEvent.events({
     var spotss = template.findAll(".spotNumber");
     var newSpotArray = []
     spotss.forEach(function(spot){
-      console.log(spot);
+      // console.log(spot);
       newSpotArray.push({number: spot.id});
     });
-    console.log(newSpotArray);
+    // console.log(newSpotArray);
     /// Start of variables to go to Method Call
 
     var titleInput = template.find(".title").value;
@@ -71,7 +71,7 @@ Template.editEvent.events({
     var zips = Meteor.call('lookupZip', city, state, function(error, result){
       
       if (result == ''){
-        console.log(result);
+        // console.log(result);
         Session.set('createError', "I couldn't verify your City and/or State.")
         throw new Meteor.Error(400, "Wrong City, State Format");
       }
@@ -216,7 +216,9 @@ Template.editEvent.rendered = function(){
   var startPM = evt.startPM;
   var endPM = evt.startPM;
   var dbDate = evt.dbDate;
-  $('#my-datepicker').datepicker('setDate', dbDate);
+  var dateParts = dbDate.match(/(\d+)/g);
+  var realDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+  $('#my-datepicker').datepicker('setDate', realDate);
   if (startPM == true){
     $('#startPMBox').prop('checked', true);
   }

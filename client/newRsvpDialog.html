@@ -1,0 +1,62 @@
+<template name="newRsvpDialog">
+  {{#if showRsvpDialog}}
+    {{> createRsvpDialog}}
+  {{else}}
+    {{> newRsvp}}
+  {{/if}}
+</template>
+
+<template name="newRsvp">
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="newRsvpModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close cancel" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="newRsvpModal">{{rsvpTitle}}</h4>
+        </div>
+        <div class="modal-body">
+          
+          {{#if error}}
+            <div class="alert alert-warning" role="alert">{{error}}</div>
+          {{/if}}
+
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="inputTitle" class="col-sm-2 control-label">Comment:</label>
+              <div class="col-sm-10">
+                <textarea id="descriptionText" class="form-control description" placeholder="{{rsvpComment}}" rows="3" autofocus ></textarea>
+              </div>
+            </div>
+            {{#if rsvpPositive}}
+            <div class="form-group">
+              <label for="inputTitle" class="col-sm-2 control-label">Total Guests:</label>
+              <div class="col-sm-4">
+                <select id = "guestsNumber">
+                  <option value = "1" checked>1</option>
+                  <option value = "2">2</option>
+                  <option value = "3">3</option>
+                  <option value = "4">4</option>
+                  <option value = "5">5</option>
+                  <option value = "6">6</option>
+                  <option value = "7">7</option>
+                  <option value = "8">8</option>
+                  <option value = "9">9</option>
+                  <option value = "10">10</option>
+                </select>
+              </div>
+            </div>
+            {{/if}}
+          </form>
+
+        
+        
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default cancel" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary save">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

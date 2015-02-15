@@ -106,24 +106,24 @@ Accounts.onCreateUser(function(options, user) {
 // Roles.addUsersToRoles('kxw34paKGWLfRGsek', 'admin');
 
 
-// var loginAttemptVerifier = function(parameters) {
-//   if (parameters.user && parameters.user.emails && (parameters.user.emails.length > 0)) {
-//     // return true if verified email, false otherwise.
-//     var found = _.find(
-//                        parameters.user.emails, 
-//                        function(thisEmail) { return thisEmail.verified }
-//                       );
+var loginAttemptVerifier = function(parameters) {
+  if (parameters.user && parameters.user.emails && (parameters.user.emails.length > 0)) {
+    // return true if verified email, false otherwise.
+    var found = _.find(
+                       parameters.user.emails, 
+                       function(thisEmail) { return thisEmail.verified }
+                      );
 
-//     if (!found) {
-//       throw new Meteor.Error(500, 'We sent you an email.');
-//     }
-//     return found && parameters.allowed;
-//   } else {
-//     console.log("user has no registered emails.");
-//     return false;
-//   }
-// }
-// Accounts.validateLoginAttempt(loginAttemptVerifier);
+    if (!found) {
+      throw new Meteor.Error(500, 'We sent you an email.');
+    }
+    return found && parameters.allowed;
+  } else {
+    console.log("user has no registered emails.");
+    return false;
+  }
+}
+Accounts.validateLoginAttempt(loginAttemptVerifier);
   
 
 Meteor.methods({
@@ -162,8 +162,14 @@ Meteor.methods({
       state: options.state,
       // longState: longState,
       latlng: [cityLatLng[0].latitude, cityLatLng[0].longitude],
-      rsvpCount: 0,
+      rsvpYesCount: 0,
+      rsvpYesTotal: 0,
+      rsvpMaybeCount: 0,
+      rsvpNoCount: 0,
       rsvpd: [],
+      rsvpdYes: [],
+      rsvpdMaybe: [],
+      rsvpdNo: [],
       tag: options.tag,
       startTime: options.startTime,
       startPM: options.startPM,
@@ -315,22 +321,129 @@ Meteor.methods({
     );
   },
 
-  updateRsvp: function (options) {
+  updateRsvpYes: function (options) {
     options = options || {};
-    if (! options.currentUser )
+    if (! options.currentUser && ! options.status && ! options.selectedPerm && ! options.description && ! options.guestsNumber)
       throw new Meteor.Error(400, "Required parameter missing");
     if (! this.userId)
       throw new Meteor.Error(403, "You must be logged in");
-    // console.log(options.spotID);
-    return Events.update({permalink: options.permalink},{
-      $inc:{
-        rsvpCount: 1,
-      },
-      $push:{
-        rsvpd: options.currentUser,
+    check(options.description, String);
+    check(options.guestsNumber, Number);
+    var user = Meteor.users.findOne({_id: options.currentUser});
+    if (user){
+      var firstName = user.profile.firstName;
+      var lastName = user.profile.lastName;
+      var userName = user.profile.userName;
+      if (firstName && lastName && userName){
+          var fullName = firstName + " " + lastName;
+      } else if (!firstName || !lastName && userName){
+          var fullName = userName;
+      } else {
+          var fullName = user.emails[0].address;
       }
-      
-    });
+    }    
+    // console.log(options.spotID);
+    if (options.status === 'yes'){
+      return Events.update({permalink: options.selectedPerm},{
+        $inc:{
+          rsvpYesCount: 1,
+          rsvpYesTotal: options.guestsNumber,
+        },
+        $push:{
+          rsvpd: options.currentUser,
+          rsvpdYes: {
+            user: options.currentUser,
+            displayName: fullName,
+            comment: options.description,
+            date: moment().format(),
+            displayDate: moment().format('MMMM Do YYYY, h:mm:ss a'),
+          }
+        }
+        
+      });
+    }
+  },
+
+  updateRsvpMaybe: function (options) {
+    options = options || {};
+    if (! options.currentUser && ! options.status && ! options.selectedPerm && ! options.description)
+      throw new Meteor.Error(400, "Required parameter missing");
+    if (! this.userId)
+      throw new Meteor.Error(403, "You must be logged in");
+    check(options.description, String);
+    // console.log(options.spotID);
+    var user = Meteor.users.findOne({_id: options.currentUser});
+    if (user){
+      var firstName = user.profile.firstName;
+      var lastName = user.profile.lastName;
+      var userName = user.profile.userName;
+      if (firstName && lastName && userName){
+          var fullName = firstName + " " + lastName;
+      } else if (!firstName || !lastName && userName){
+          var fullName = userName;
+      } else {
+          var fullName = user.emails[0].address;
+      }
+    }   
+    if (options.status === 'maybe'){
+      return Events.update({permalink: options.selectedPerm},{
+        $inc:{
+          rsvpMaybeCount: 1,
+        },
+        $push:{
+          rsvpd: options.currentUser,
+          rsvpdMaybe: {
+            user: options.currentUser,
+            comment: options.description,
+            displayName: fullName,
+            date: moment().format(),
+            displayDate: moment().format('MMMM Do YYYY, h:mm:ss a'),
+          }
+        }
+        
+      });
+    }
+  },
+
+  updateRsvpNo: function (options) {
+    options = options || {};
+    if (! options.currentUser && ! options.status && ! options.selectedPerm && ! options.description)
+      throw new Meteor.Error(400, "Required parameter missing");
+    if (! this.userId)
+      throw new Meteor.Error(403, "You must be logged in");
+    check(options.description, String);
+    // console.log(options.spotID);
+    var user = Meteor.users.findOne({_id: options.currentUser});
+    if (user){
+      var firstName = user.profile.firstName;
+      var lastName = user.profile.lastName;
+      var userName = user.profile.userName;
+      if (firstName && lastName && userName){
+          var fullName = firstName + " " + lastName;
+      } else if (!firstName || !lastName && userName){
+          var fullName = userName;
+      } else {
+          var fullName = user.emails[0].address;
+      }
+    }   
+    if (options.status === 'no'){
+      return Events.update({permalink: options.selectedPerm},{
+        $inc:{
+          rsvpNoCount: 1,
+        },
+        $push:{
+          rsvpd: options.currentUser,
+          rsvpdNo: {
+            user: options.currentUser,
+            comment: options.description,
+            displayName: fullName,
+            date: moment().format(),
+            displayDate: moment().format('MMMM Do YYYY, h:mm:ss a'),
+          }
+        }
+        
+      });
+    }
   },
 
   deleteEvent: function (options) {
@@ -443,6 +556,12 @@ Meteor.methods({
    getState: function(abr){
       console.log(findStates[abr]);
       return findStates[abr];
+   },
+
+   getUser: function(userID){
+      check(userID, String);
+      // might have to check to make sure it's not any special characters
+      return Meteor.users.findOne({_id:userID}, {fields: {profile:1}} );
    },
 
    setAddress: function(addr){

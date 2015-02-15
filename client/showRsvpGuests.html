@@ -1,0 +1,89 @@
+<template name="showRsvpGuests">
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="showRsvpGuests" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close cancel" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="showRsvpGuests">Guests</h4>
+        </div>
+
+        <div role="tabpanel">
+
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="{{yesStatus}}" id="rsvpYes"><a href="#" aria-controls="rsvpYes" role="tab" data-toggle="tab">Yes</a></li>
+            <li role="presentation" class="{{maybeStatus}}" id="rsvpMaybe"><a href="#" aria-controls="rsvpMaybe" role="tab" data-toggle="tab">Maybe</a></li>
+            <li role="presentation" class="{{noStatus}}" id="rsvpNo"><a href="#" aria-controls="rsvpYes" role="tab" data-toggle="tab">No</a></li>
+          </ul>
+          <div class="tab-content">
+            {{> guestList}}
+          </div>
+        </div>
+        <!-- The rest of the /div's are in the below templates -->
+      </div>
+    </div>
+  </div>
+  
+</template>
+
+
+<template name="guestList">
+  <div role="tabpanel" class="tab-pane active" id="guestList">
+    <div class="modal-body">
+      
+      {{#if error}}
+        <div class="alert alert-warning" role="alert">>{{error}}</div>
+      {{/if}}
+
+        {{#if yesList}}
+          {{#each yesList}}
+            <div class="guestList">
+              <h3>{{displayName}}</h3>
+              <hr/>
+              <span class="guestComment">{{comment}}</span>
+              <br/>
+              <span class="guestPostTime">{{displayDate}} </span>
+              <br/>
+            </div>
+          {{/each}}
+        {{/if}}
+
+        {{#if maybeList}}
+          {{#each maybeList}}
+            <div class="guestList">
+              <h3>{{displayName}}</h3>
+              <hr/>
+              <span class="guestComment">{{comment}}</span>
+              <br/>
+              <span class="guestPostTime">{{displayDate}} </span>
+              <br/>
+            </div>
+          {{/each}}
+        {{/if}}
+
+        {{#if noList}}
+          {{#each noList}}
+            <div class="guestList">
+              <h3>{{displayName}}</h3>
+              <hr/>
+              <span class="guestComment">{{comment}}</span>
+              <br/>
+              <span class="guestPostTime">{{displayDate}} </span>
+              <br/>
+            </div>
+          {{/each}}
+        {{/if}}
+
+      <!-- </div> End of col div -->
+    </div>  <!-- End of Content -->
+  </div>  <!-- End of Tab Content -->
+
+ 
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default cancel" data-dismiss="modal">Close</button>
+    </div>
+</template>
+
+
+
+

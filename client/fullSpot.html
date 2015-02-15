@@ -8,7 +8,7 @@
     </div>
   </div>
   <div class='row'>
-    <div class="col-sm-12">
+    <div class="col-sm-8">
       {{> feed}}
     </div>
   </div>
@@ -23,13 +23,12 @@
     <br />
     <hr>
     {{> spotYelpInfo}}
-    {{> rsvp}}
 
   {{/if}}
 </template>
 
 <template name="rsvp">
-  {{#if show_LoginDialog}}
+  <!-- {{#if show_LoginDialog}}
     {{> showLoginDialog}}
   {{/if}}
   {{#if showRsvpDialog}}
@@ -37,12 +36,18 @@
   {{/if}}
   {{#if showRsvpError}}
     {{> createRsvpError}}
-  {{/if}}
-  <br />
-  <br />
+  {{/if}} -->
+  <!-- <br /> -->
+  <!-- <br /> -->
   <div class='row'>
-    <div class="col-sm-2">
-      <button type="button" class="btn btn-primary btn-sm RSVP" data-toggle="myModal" disabled="{{disabled}}" data-target="#myModal">Want to RSVP?</button>
+    <div class="col-sm-6">
+      {{#if disabled}}
+        <button type="button" class="btn btn-primary btn-sm rsvp"  id="yes" data-toggle="myModal" disabled="{{disabled}}" data-target="#myModal">You already RSVP'd {{status}}</button>
+      {{else}}
+        <button type="button" class="btn btn-primary btn-sm rsvp"  id="yes" data-toggle="myModal" disabled="{{disabled}}" data-target="#myModal">Yes</button>
+        <button type="button" class="btn btn-primary btn-sm rsvp" id="maybe" data-toggle="myModal" disabled="{{disabled}}" data-target="#myModal">Maybe</button>
+        <button type="button" class="btn btn-primary btn-sm rsvp" id="no" data-toggle="myModal" disabled="{{disabled}}" data-target="#myModal">No</button>
+      {{/if}}
     </div>
   </div>
   
@@ -115,13 +120,26 @@
 </template>
 
 <template name ='fullSpot'>
+  <!-- <hr/> -->
   <h2>{{ title }}</h2>
-  <h4>Where: {{city}}, {{state}}</h4>
-  <h4>When: {{date}}</h4>
-  <h5>Starts at {{finalStartTime}}</h5>
-  <h5>Event Hashtag: {{tag}}</h5>
-  <h5>RSVP's: <span class="rsvps">{{rsvpCount}}</span></h5>
-  <h5>Created by: {{userName}}</h5>
+  <!-- <div class="eventDetails">.</div> -->
+  <hr/>
+    <h4>When: {{date}}</h4>
+    <h4>Where: {{city}}, {{state}}</h4>
+    <h5>Starts at {{finalStartTime}}</h5>
+    <h5>Event Hashtag: {{tag}}</h5>
+    <h5>Created by: {{userName}}</h5>
+    <h5>RSVP's:</h5>
+    <a class="btn btn-default" href="#" id="yes" role="button">Yes: {{rsvpYesCount}}</a>
+    <a class="btn btn-default" href="#" id="maybe" role="button">Maybe: {{rsvpMaybeCount}}</a>
+    <a class="btn btn-default" href="#" id="no" role="button">No: {{rsvpNoCount}}</a>
+
+    <br />
+    <br />
+    <h5>Will you be attending?</h5> 
+    {{> rsvp}}
+    <br/>
+  <hr/>
   <h3>Hello</h3>
   {{ description }}
   <br />

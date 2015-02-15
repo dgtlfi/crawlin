@@ -6,8 +6,9 @@ body {
 div.photo {
     width: 270px;
     float: left;
-    background: #FFFFDE;
+    background: #222;
     margin: 5px;
+    color:#fff;
 }
 
 .photo img {
@@ -171,15 +172,70 @@ svg {
 }
 
 .box{
-    width: 300px;
+    width: 100px;
     height: 100px;
-    background-color: yellow;
+    background-color: white;
     display:block;
-    box-shadow:10px 10px 50px 20px pink inset;
+    box-shadow:10px 10px 50px 20px gold inset;
 }
 
 .container-full{
-    background: url("http://41.media.tumblr.com/tumblr_l7f13tQRHQ1qdq889o1_1280.jpg") no-repeat center center fixed;
+    background-image: url("http://40.media.tumblr.com/tumblr_m85yphFHEk1rajqbao1_r1_1280.jpg");
+    background-position: right center;
     color: white;
 }
+
+.eventDetails{
+    background-image: url("http://41.media.tumblr.com/tumblr_mbphlr5lm81rajqbao1_r1_1280.jpg");
+    background-position: center center;
+    height: 8px;
+    color: white;
+    padding-left:20px;
+    /*margin-right: 50%;*/
+
+}
+
+.guestComment{
+    /*width:50%;*/
+    display: block;
+    padding-left: 05%;
+    font-family: helvetica, sans-serif;
+    word-wrap: break-word;
+}
+.guestPostTime{
+    padding-left: 20%;
+    color:#9D9D9D;
+
+}
+
+.guestList {
+    width: 60%;
+    height: 20%;
+
+}
+
+.guestNumbers{
+    /*width:40%;*/
+    height:10%;
+    /*display: inline;*/
+}
+
+.guestHeading{
+    /*display: inline;*/
+    height:5%;
+    width: 5%;
+}
+
+.guestBody{
+    
+}
   
+.eventDetails2{
+    background-image: url("http://41.media.tumblr.com/tumblr_mbphlr5lm81rajqbao1_r1_1280.jpg");
+    background-position: center center;
+    height: 50px;
+    color: white;
+    padding-left:20px;
+    /*margin-right: 50%;*/
+
+}
